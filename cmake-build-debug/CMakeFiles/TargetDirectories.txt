@@ -1,0 +1,3 @@
+D:/Files/Projects/LearnProjects/Dev/CNN/cmake-build-debug/CMakeFiles/CNN.dir
+D:/Files/Projects/LearnProjects/Dev/CNN/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Files/Projects/LearnProjects/Dev/CNN/cmake-build-debug/CMakeFiles/rebuild_cache.dir
