@@ -1,23 +1,24 @@
 #ifndef LEAKY_RELU_LAYER_H
 #define LEAKY_RELU_LAYER_H
 
-class Leaky_ReLU_layer: public activation_layer {
+#include "layer.h"
+#include "activation_layer.h"
+
+class LeakyReluLayer: public ActivationLayer {
 private:
     //
 public:
-    void forward(const std::vector<float>& input) override {
-        output_ = &input;
-        for (int i = 0; i < input.size(); i++) {
-            (*output_)[i] = activation(input[i]);
-        }
-    }
-    
+    LeakyReluLayer(): ActivationLayer(LayerType::LEAKY_ReLU) {}
+    LeakyReluLayer(const LeakyReluLayer &leaky_ReLU_layer): ActivationLayer(leaky_ReLU_layer) {}
+
     float activation(float x) const override {
-        return (x > 0) : x : 0.1 * x;
+        return x > 0 ? x : 0.1 * x;
     }
 
-    Leaky_ReLU_layer* clone() const override {
-        return new Leaky_ReLU_layer();
+    LeakyReluLayer* clone() const override {
+        return new LeakyReluLayer(*this);
     }
+
+    ~LeakyReluLayer() override { }
 };
 #endif //LEAKY_RELU_LAYER_H
