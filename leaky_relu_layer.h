@@ -5,20 +5,21 @@
 #include "activation_layer.h"
 
 class LeakyReluLayer: public ActivationLayer {
-private:
-    //
 public:
-    LeakyReluLayer(): ActivationLayer(LayerType::LEAKY_ReLU) {}
-    LeakyReluLayer(const LeakyReluLayer &leaky_ReLU_layer): ActivationLayer(leaky_ReLU_layer) {}
+    LeakyReluLayer(): ActivationLayer(LayerParameters(LayerType::LEAKY_ReLU,false)) {}
 
-    float activation(float x) const override {
+    inline float activation(float x) const override {
         return x > 0 ? x : 0.1 * x;
     }
-
-    LeakyReluLayer* clone() const override {
+    inline void print_info() const override {
+        std::cout << "LAYER NAME: LEAKY ReLU\n";
+        std::cout << "INPUT TENSOR: " << in_shape_ << "\n";
+        std::cout << "OUTPUT TENSOR: " << out_shape_ << "\n";
+        std::cout << "------------------------\n";
+    }
+    inline LeakyReluLayer* clone() const override {
         return new LeakyReluLayer(*this);
     }
 
-    ~LeakyReluLayer() override { }
 };
 #endif //LEAKY_RELU_LAYER_H

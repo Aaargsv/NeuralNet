@@ -6,41 +6,36 @@
 #include <fstream>
 
 class Layer {
-private:
-
 public:
-    /*feature maps sizes*/
-    int h_;
-    int w_;
-    int c_;
-    int out_h_;
-    int out_w_;
-    int out_c_;
-    int input_size_;
-    int output_size_;
-    int weights_size_;
-    bool can_weights_be_loaded_;
+    Layer(const LayerParameters &layer_param): layer_param_(layer_param) {}
+    virtual ~Layer() {};
 
-    /*layer characteristic*/
-    LayerType layer_type_;
+    virtual void forward(std::vector<float> *input_tensor,
+                         std::vector<float> *output_tensor) = 0;
 
-    /*output feature maps*/
-    std::vector<float> output_;
+    /**
+    * @brief Initialize layer in_shape, compute out_shape,
+    *        allocate resources.
+    */
+    virtual void setup(const Shape &shape) = 0;
+    virtual void load_pretrained(std::ifstream &input_file) = 0;
+    virtual Layer* clone() const = 0;
+    virtual void print_info() const = 0;
 
-    Layer(LayerType layer_type, bool can_weights_be_loaded):layer_type_(layer_type),
-                                                            can_weights_be_loaded_(can_weights_be_loaded) {}
-    Layer(const Layer &layer) {
-        layer_type_ = layer.layer_type_;
-        can_weights_be_loaded_ = layer.can_weights_be_loaded_;
+    inline const LayerParameters& layer_param() const {
+        return layer_param_;
+    }
+    inline const Shape& in_shape() const {
+        return in_shape_;
+    }
+    inline const Shape& out_shape() const {
+        return out_shape_;
     }
 
-    virtual void forward(const std::vector<float> &input)  = 0;
-    virtual Layer* clone() const = 0;
-    virtual void setup(int h, int w, int c) = 0;
-    virtual void load_weights(std::ifstream &weights_file_input) = 0;
-    virtual ~Layer() {};
 protected:
-    std::vector<float> weights_;
+    LayerParameters layer_param_;
+    /// Input and output tensor shapes
+    Shape in_shape_;
+    Shape out_shape_;
 };
-
 #endif //LAYER_H

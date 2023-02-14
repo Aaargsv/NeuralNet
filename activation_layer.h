@@ -2,43 +2,31 @@
 #define ACTIVATION_LAYER_H
 
 #include "layer.h"
+#include "neural.h"
 #include <iostream>
 
 class ActivationLayer: public Layer {
-private:
-    void load_weights(std::ifstream& weights_file_input) override {}
 public:
-    virtual float activation(float x) const = 0;
-
-    ActivationLayer(LayerType layer_type): Layer(layer_type, false) {}
-    ActivationLayer(const ActivationLayer &activation_layer): Layer(activation_layer) {}
-
-    void forward(const std::vector<float>& input) override {
-        std::cout << "activation forward\n";
-        std::cout << "input height = " << h_ << std::endl;
-        std::cout << "input weight = " << w_ << std::endl;
-        std::cout << "input channels = " << c_ << std::endl;
-        std::cout << "output height = " << out_h_ << std::endl;
-        std::cout << "output weight = " << out_w_ << std::endl;
-        std::cout << "output channels = " << out_c_ << std::endl;
-        std::cout << "----------------------------------------------\n";
-
-        /*output_ = &input;
+    ActivationLayer(const LayerParameters &layer_param): Layer(layer_param) {}
+    ~ActivationLayer() {}
+    inline void forward(std::vector<float> *input_tensor, std::vector<float> *output_tensor) override {
+        std::vector<float> &input = *input_tensor;
+        std::vector<float> &output = *output_tensor;
         for (int i = 0; i < input.size(); i++) {
-            (*output_)[i] = activation(input[i]);
-        }*/
+            output[i] = activation(input[i]);
+        }
     }
 
-    void setup(int h, int w, int c) override {
-        h_ = h;
-        w_ = w;
-        c_ = c;
-        input_size_ = h_ * w_ * c_;
-        out_h_ = h;
-        out_w_ = w;
-        out_c_ = c;
-        output_size_ = h * w * c;
+    inline void setup(const Shape &shape) override {
+        in_shape_ = shape;
+        out_shape_ = shape;
     }
+
+protected:
+    virtual float activation(float x) const = 0;
+private:
+    void load_pretrained(std::ifstream &input_file) override {};
+
 };
 
 #endif //ACTIVATION_LAYER_H
