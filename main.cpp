@@ -14,7 +14,6 @@ int main() {
   ;
     cnn.setup();
 
-
     std::vector<float> image(416 * 416 * 3);
     cnn.forward(&image);
 

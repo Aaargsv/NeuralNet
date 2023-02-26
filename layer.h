@@ -18,7 +18,7 @@ public:
     *        allocate resources.
     */
     virtual void setup(const Shape &shape) = 0;
-    virtual void load_pretrained(std::ifstream &input_file) = 0;
+    virtual int load_pretrained(std::ifstream &input_file) = 0;
     virtual Layer* clone() const = 0;
     virtual void print_info() const = 0;
 
