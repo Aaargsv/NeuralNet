@@ -7,13 +7,15 @@ public:
     ~BiasLayer() override {};
 
     inline void forward(std::vector<float> *input_tensor,
-                 std::vector<float> *output_tensor)  override {
+                 std::vector<float> *output_tensor)  override
+    {
         output_tensor = input_tensor;
         std::vector<float> &input = *input_tensor;
         add_bias(input);
     }
 
-    void add_bias(std::vector<float> &input) {
+    void add_bias(std::vector<float> &input)
+    {
         int c = in_shape_.c_;
         int channel_size = in_shape_.h_ * in_shape_.w_;
         for (int i = 0; i < c; i++) {
@@ -22,23 +24,30 @@ public:
         }
     }
 
-    inline void setup(const Shape &shape) {
+    inline void setup(const Shape &shape)
+    {
         in_shape_ = shape;
         out_shape_ = shape;
         bias_.reserve(shape.c_);
     };
-    int load_pretrained(std::ifstream &input_file) override {
-
+    int load_pretrained(std::ifstream &weights_file) override
+    {
+        if(!weights_file.read(reinterpret_cast<char*>(bias_.data()),
+                              out_shape_.c_ * sizeof(float)))
+            return 1;
+        return 0;
     };
 
-    inline void print_info() const override {
+    inline void print_info() const override
+    {
         std::cout << "LAYER NAME: BIAS\n";
         std::cout << "INPUT TENSOR: " << in_shape_ << "\n";
         std::cout << "OUTPUT TENSOR: " << out_shape_ << "\n";
         std::cout << "------------------------\n";
     }
 
-    inline BiasLayer* clone() const override {
+    inline BiasLayer* clone() const override
+    {
         return new BiasLayer(*this);
     };
 
