@@ -9,10 +9,10 @@ void ConvolutionLayer::forward(std::vector<float> *input_tensor, std::vector<flo
 
 void ConvolutionLayer::setup(const Shape &shape) {
     in_shape_ = shape;
+    weights_length_ = kernel_size_ * kernel_size_ * filters_;
     out_shape_.reshape(compute_out_height(), compute_out_width(), filters_);
-    weights_.reserve(kernel_size_ * kernel_size_ * filters_);
+    weights_.reserve(weights_length_);
     outputs_.reserve(out_shape_.get_size());
-
     if (has_batch_norm_)
         inter_layer = new BatchNormLayer();
     else
@@ -20,9 +20,15 @@ void ConvolutionLayer::setup(const Shape &shape) {
     inter_layer->setup(out_shape_);
 }
 
-void ConvolutionLayer::load_pretrained(std::ifstream &input_file) {
-    inter_layer->load_pretrained(input_file);
+int ConvolutionLayer::load_pretrained(std::ifstream &weights_file) {
+
+    inter_layer->load_pretrained(weights_file);
+    weights_file.read(reinterpret_cast<char*>(weights_.data()),
+                    kernel_size_ * kernel_size_ * filters_);
+    if (weights_file.gcount() / sizeof(float) != weights_length_)
+        return 1;
     std::cout << "convolution load weights\n";
+    return 0;
 }
 
 void ConvolutionLayer::print_info() const {

@@ -27,7 +27,7 @@ public:
         out_shape_ = shape;
         bias_.reserve(shape.c_);
     };
-    void load_pretrained(std::ifstream &input_file) override {
+    int load_pretrained(std::ifstream &input_file) override {
 
     };
 

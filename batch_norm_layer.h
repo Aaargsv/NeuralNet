@@ -14,7 +14,7 @@ public:
                  std::vector<float> *output_tensor)  override;
 
     void setup(const Shape &shape) override;
-    void load_pretrained(std::ifstream &input_file) override;
+    int load_pretrained(std::ifstream &input_file) override;
     void print_info() const override;
 
     inline BatchNormLayer* clone() const override {

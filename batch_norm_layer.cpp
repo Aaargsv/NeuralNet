@@ -6,7 +6,7 @@ void BatchNormLayer::forward(std::vector<float> *input_tensor,
     print_info();
 }
 
-void BatchNormLayer::load_pretrained(std::ifstream &input_file) {
+int BatchNormLayer::load_pretrained(std::ifstream &input_file) {
 
 }
 

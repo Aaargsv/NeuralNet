@@ -23,7 +23,7 @@ public:
 
     void forward(std::vector<float> *input_tensor,
                  std::vector<float> *output_tensor) override;
-    void load_pretrained(std::ifstream &input_file) override;
+    int load_pretrained(std::ifstream &input_file) override;
     void setup(const Shape &shape) override;
     void print_info() const override;
 
@@ -47,6 +47,7 @@ protected:
     int filters_;
     int padding_;
     int stride_;
+    int weights_length_;
     /// Bias layer or batch_norm layer.
     Layer *inter_layer;
     std::vector<float> weights_;
