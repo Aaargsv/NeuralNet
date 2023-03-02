@@ -2,15 +2,29 @@
 #include <iostream>
 
 void BatchNormLayer::forward(std::vector<float> *input_tensor,
-                             std::vector<float> *output_tensor) {
+                             std::vector<float> *output_tensor)
+{
     print_info();
 }
 
-int BatchNormLayer::load_pretrained(std::ifstream &input_file) {
-
+int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
+{
+    if (!weights_file.read(reinterpret_cast<char*>(beta_.data()),
+                           out_shape_.c_ * sizeof(float)))
+        return 1;
+    if (!weights_file.read(reinterpret_cast<char*>(gamma_.data()),
+                           out_shape_.c_ * sizeof(float)))
+        return 1;
+    if (!weights_file.read(reinterpret_cast<char*>( rolling_mean_.data()),
+                           out_shape_.c_ * sizeof(float)))
+        return 1;
+    if (!weights_file.read(reinterpret_cast<char*>( rolling_variance_.data()),
+                           out_shape_.c_ * sizeof(float)))
+        return 1;
 }
 
-void BatchNormLayer::setup(const Shape &shape) {
+void BatchNormLayer::setup(const Shape &shape)
+{
     in_shape_ = shape;
     out_shape_ = shape;
     rolling_mean_.reserve(shape.c_);
@@ -19,7 +33,8 @@ void BatchNormLayer::setup(const Shape &shape) {
     beta_.reserve(shape.c_);
 }
 
-void BatchNormLayer::print_info() const  {
+void BatchNormLayer::print_info() const
+{
     std::cout << "LAYER NAME: BATCH_NORM\n";
     std::cout << "INPUT TENSOR: " << in_shape_ << "\n";
     std::cout << "OUTPUT TENSOR: " << out_shape_ << "\n";
