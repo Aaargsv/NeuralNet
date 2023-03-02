@@ -4,6 +4,7 @@
 
 void MaxPollingLayer::forward(std::vector<float> *input_tensor,
                               std::vector<float> *output_tensor) {
+
     print_info();
 }
 

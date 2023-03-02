@@ -22,7 +22,8 @@ void ConvolutionLayer::setup(const Shape &shape) {
 
 int ConvolutionLayer::load_pretrained(std::ifstream &weights_file) {
 
-    inter_layer->load_pretrained(weights_file);
+    if ( inter_layer->load_pretrained(weights_file))
+        return 1;
     if(!weights_file.read(
             reinterpret_cast<char*>(weights_.data()),
               weights_length_ * sizeof(float)))
