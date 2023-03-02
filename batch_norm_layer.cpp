@@ -21,6 +21,7 @@ int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
     if (!weights_file.read(reinterpret_cast<char*>( rolling_variance_.data()),
                            out_shape_.c_ * sizeof(float)))
         return 1;
+    return 0;
 }
 
 void BatchNormLayer::setup(const Shape &shape)
