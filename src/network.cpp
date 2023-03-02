@@ -1,4 +1,4 @@
-#include "network.h"
+#include "layers/network.h"
 #include <fstream>
 Network::~Network()
 {

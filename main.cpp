@@ -1,7 +1,7 @@
-#include "network.h"
-#include "convolution_layer.h"
-#include "max_pooling_layer.h"
-#include "leaky_relu_layer.h"
+#include "layers/network.h"
+#include "layers/convolution_layer.h"
+#include "layers/max_pooling_layer.h"
+#include "include/layers/leaky_relu_layer.h"
 #include <iostream>
 #include <vector>
 

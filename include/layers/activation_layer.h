@@ -25,8 +25,12 @@ public:
 protected:
     virtual float activation(float x) const = 0;
 private:
-    void load_pretrained(std::ifstream &input_file) override {};
-
+    int load_pretrained(std::ifstream &input_file) override
+    {
+        return 0;
+    }
 };
+
+
 
 #endif //ACTIVATION_LAYER_H

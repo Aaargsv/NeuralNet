@@ -1,5 +1,5 @@
-#include "convolution_layer.h"
-#include "utils.h"
+#include "layers/convolution_layer.h"
+#include "utils/utils.h"
 #include <iostream>
 
 void ConvolutionLayer::forward(std::vector<float> *input_tensor, std::vector<float> *output_tensor) {

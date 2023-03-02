@@ -1,4 +1,4 @@
-#include "batch_norm_layer.h"
+#include "layers/batch_norm_layer.h"
 #include <iostream>
 
 void BatchNormLayer::forward(std::vector<float> *input_tensor,

@@ -36,7 +36,10 @@ protected:
     std::vector<float> outputs_;
 
 private:
-    void load_pretrained(std::ifstream &input_file) override {};
+    int load_pretrained(std::ifstream &weights_file) override
+    {
+        return 0;
+    };
 };
 
 #endif //MAX_POOLING_LAYER_H

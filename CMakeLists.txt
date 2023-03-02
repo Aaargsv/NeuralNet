@@ -2,5 +2,5 @@ cmake_minimum_required(VERSION 3.17)
 project(CNN)
 
 set(CMAKE_CXX_STANDARD 14)
-
-add_executable(CNN main.cpp layer.h network.cpp network.h neural.h activation_layer.h leaky_relu_layer.h convolution_layer.h convolution_layer.cpp max_pooling_layer.h max_pooling_layer.cpp batch_norm_layer.h batch_norm_layer.cpp utils.h utils.cpp bias_layer.h)
+include_directories(include)
+add_executable(CNN main.cpp include/layers/layer.h src/network.cpp include/layers/network.h include/neural.h include/layers/activation_layer.h include/layers/leaky_relu_layer.h include/layers/convolution_layer.h src/layers/convolution_layer.cpp include/layers/max_pooling_layer.h src/layers/max_pooling_layer.cpp include/layers/batch_norm_layer.h src/layers/batch_norm_layer.cpp include/utils/utils.h src/utils/utils.cpp include/layers/bias_layer.h)

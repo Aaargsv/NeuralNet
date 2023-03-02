@@ -1,5 +1,5 @@
-#include "max_pooling_layer.h"
-#include "utils.h"
+#include "layers/max_pooling_layer.h"
+#include "utils/utils.h"
 #include <iostream>
 
 void MaxPollingLayer::forward(std::vector<float> *input_tensor,
