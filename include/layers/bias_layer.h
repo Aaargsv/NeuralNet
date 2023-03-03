@@ -1,6 +1,8 @@
 #ifndef BIAS_LAYER_H
 #define BIAS_LAYER_H
-#include "layer.h"
+#include "layers/layer.h"
+#include "operations/tensor_math.h"
+
 class BiasLayer: public Layer {
 public:
     BiasLayer(): Layer(LayerParameters(LayerType::BIAS,true)) {}
@@ -11,17 +13,7 @@ public:
     {
         output_tensor = input_tensor;
         std::vector<float> &input = *input_tensor;
-        add_bias(input);
-    }
-
-    void add_bias(std::vector<float> &input)
-    {
-        int c = in_shape_.c_;
-        int channel_size = in_shape_.h_ * in_shape_.w_;
-        for (int i = 0; i < c; i++) {
-            for (int j = 0; j < channel_size; j++)
-                input[i * channel_size + j] += bias_[i];
-        }
+        add_bias(input, bias_, in_shape_.c_, in_shape_.h_ * in_shape_.w_);
     }
 
     inline void setup(const Shape &shape)

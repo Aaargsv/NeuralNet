@@ -1,9 +1,11 @@
 #include "layers/batch_norm_layer.h"
+#include "operations/tensor_math.h"
 #include <iostream>
 
 void BatchNormLayer::forward(std::vector<float> *input_tensor,
                              std::vector<float> *output_tensor)
 {
+    output_tensor = input_tensor;
     print_info();
 }
 

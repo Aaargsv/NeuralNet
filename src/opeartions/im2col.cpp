@@ -1,4 +1,4 @@
-#include "algorithms/im2col.h"
+#include "operations/im2col.h"
 #include <vector>
 
 template <typename T>
