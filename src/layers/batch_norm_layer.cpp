@@ -6,6 +6,12 @@ void BatchNormLayer::forward(std::vector<float> *input_tensor,
                              std::vector<float> *output_tensor)
 {
     output_tensor = input_tensor;
+    normalize(*input_tensor, rolling_mean_, rolling_variance_,
+              in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+    scale(*input_tensor, gamma_,
+              in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+    add_bias(*input_tensor, _,
+          in_shape_.c_, in_shape_.h_ * in_shape_.w_);
     print_info();
 }
 
