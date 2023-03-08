@@ -9,7 +9,7 @@ class ActivationLayer: public Layer {
 public:
     ActivationLayer(const LayerParameters &layer_param): Layer(layer_param) {}
     ~ActivationLayer() {}
-    inline void forward(std::vector<float> *input_tensor, std::vector<float> *output_tensor) override {
+    std::vector<float> *forward(std::vector<float> *input_tensor, std::vector<float> *output_tensor) override {
         std::vector<float> &input = *input_tensor;
         std::vector<float> &output = *output_tensor;
         for (int i = 0; i < input.size(); i++) {

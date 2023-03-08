@@ -8,8 +8,7 @@ public:
     BiasLayer(): Layer(LayerParameters(LayerType::BIAS,true)) {}
     ~BiasLayer() override {};
 
-    inline void forward(std::vector<float> *input_tensor,
-                 std::vector<float> *output_tensor)  override
+    std::vector<float> *forward(std::vector<float> *input_tensor)  override
     {
         output_tensor = input_tensor;
         std::vector<float> &input = *input_tensor;

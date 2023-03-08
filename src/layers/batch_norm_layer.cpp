@@ -10,7 +10,7 @@ void BatchNormLayer::forward(std::vector<float> *input_tensor,
               in_shape_.c_, in_shape_.h_ * in_shape_.w_);
     scale(*input_tensor, gamma_,
               in_shape_.c_, in_shape_.h_ * in_shape_.w_);
-    add_bias(*input_tensor, _,
+    add_bias(*input_tensor, beta_,
           in_shape_.c_, in_shape_.h_ * in_shape_.w_);
     print_info();
 }

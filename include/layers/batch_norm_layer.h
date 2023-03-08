@@ -10,8 +10,7 @@ public:
     BatchNormLayer(): Layer(LayerParameters(LayerType::BATCH_NORM,true)) {}
     ~BatchNormLayer() override {};
 
-    void forward(std::vector<float> *input_tensor,
-                 std::vector<float> *output_tensor)  override;
+    std::vector<float> *forward(std::vector<float> *input_tensor)  override;
 
     void setup(const Shape &shape) override;
     int load_pretrained(std::ifstream &input_file) override;

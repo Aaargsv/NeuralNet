@@ -10,8 +10,7 @@ public:
     Layer(const LayerParameters &layer_param): layer_param_(layer_param) {}
     virtual ~Layer() {};
 
-    virtual void forward(std::vector<float> *input_tensor,
-                         std::vector<float> *output_tensor) = 0;
+    virtual std::vector<float> *forward(std::vector<float> *input_tensor) = 0;
 
     /**
     * @brief Initialize layer in_shape, compute out_shape,
@@ -19,16 +18,16 @@ public:
     */
     virtual void setup(const Shape &shape) = 0;
     virtual int load_pretrained(std::ifstream &weights_file) = 0;
-    virtual Layer* clone() const = 0;
+    virtual Layer *clone() const = 0;
     virtual void print_info() const = 0;
 
-    inline const LayerParameters& layer_param() const {
+    inline const LayerParameters &layer_param() const {
         return layer_param_;
     }
-    inline const Shape& in_shape() const {
+    inline const Shape &in_shape() const {
         return in_shape_;
     }
-    inline const Shape& out_shape() const {
+    inline const Shape &out_shape() const {
         return out_shape_;
     }
 

@@ -7,15 +7,14 @@ Network::~Network()
     }
 }
 
-std::vector<float>* Network::forward(std::vector<float> *input_image)
+std::vector<float>* Network::forward(std::vector<float>* input_image)
 {
-    std::vector<float> *input_tensor = input_image;
-    std::vector<float> *output_tensor;
-    for (int i = 0; i < layers_.size(); i++) {
-        layers_[i]->forward(input_tensor, output_tensor);
-        input_tensor = output_tensor;
+    std::vector<float> *tensor;
+    tensor = layers_[0]->forward(input_image);
+    for (int i = 1; i < layers_.size(); i++) {
+        tensor = layers_[i]->forward(tensor);
     }
-    return output_tensor;
+    return tensor;
 }
 
 void Network::setup()
