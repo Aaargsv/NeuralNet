@@ -21,10 +21,10 @@ public:
        delete inter_layer;
     }
 
-    void forward(std::vector<float> *input_tensor,
-                 std::vector<float> *output_tensor) override;
+    std::vector<float>* forward(std::vector<float> *input_tensor,
+                                std::vector<float> &utility_memory) override;
     int load_pretrained(std::ifstream &input_file) override;
-    void setup(const Shape &shape) override;
+    int setup(const Shape &shape) override;
     void print_info() const override;
 
     inline int compute_out_height() const {
@@ -38,6 +38,7 @@ public:
     inline ConvolutionLayer* clone() const override {
         return new ConvolutionLayer(*this);
     }
+
 
 protected:
     /// False - Bias. True - Batch_norm.

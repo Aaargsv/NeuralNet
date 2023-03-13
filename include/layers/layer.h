@@ -10,16 +10,21 @@ public:
     Layer(const LayerParameters &layer_param): layer_param_(layer_param) {}
     virtual ~Layer() {};
 
-    virtual std::vector<float> *forward(std::vector<float> *input_tensor) = 0;
+    virtual std::vector<float> *forward(std::vector<float> *input_tensor,
+                                        std::vector<float> &utility_memory) = 0;
 
     /**
     * @brief Initialize layer in_shape, compute out_shape,
     *        allocate resources.
+    * @return utility memory size
     */
-    virtual void setup(const Shape &shape) = 0;
+    virtual int setup(const Shape &shape) = 0;
     virtual int load_pretrained(std::ifstream &weights_file) = 0;
     virtual Layer *clone() const = 0;
     virtual void print_info() const = 0;
+    virtual int get_utility_memory_size() const {
+        return 0;
+    };
 
     inline const LayerParameters &layer_param() const {
         return layer_param_;

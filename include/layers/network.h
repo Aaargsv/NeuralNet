@@ -22,5 +22,6 @@ protected:
     Shape image_shape;
     /// Network layers
     std::vector<Layer*> layers_;
+    std::vector<float> utility_memory;
 };
 #endif //NETWORK_H

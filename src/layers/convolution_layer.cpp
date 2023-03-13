@@ -1,13 +1,22 @@
 #include "layers/convolution_layer.h"
+#include "operations/convolution.h"
 #include "utils/utils.h"
 #include <iostream>
 
-void ConvolutionLayer::forward(std::vector<float> *input_tensor, std::vector<float> *output_tensor) {
+std::vector<float> *ConvolutionLayer::forward(std::vector<float> *input_tensor,
+                                              std::vector<float> &utility_memory) {
+
+    std::vector<float> &input = *input_tensor;
+    convolution(input, in_shape_.c_, in_shape_.h_, in_shape_.w_,
+                kernel_size_, stride_, padding_, weights_, out_shape_.c_,
+                utility_memory, out_shape_.h_, out_shape_.w_, outputs_);
+    inter_layer->forward(&outputs_, utility_memory);
     print_info();
     inter_layer->print_info();
+    return &outputs_;
 }
 
-void ConvolutionLayer::setup(const Shape &shape) {
+int ConvolutionLayer::setup(const Shape &shape) {
     in_shape_ = shape;
     weights_length_ = kernel_size_ * kernel_size_ * filters_;
     out_shape_.reshape(compute_out_height(), compute_out_width(), filters_);
@@ -18,6 +27,9 @@ void ConvolutionLayer::setup(const Shape &shape) {
     else
         inter_layer = new BiasLayer();
     inter_layer->setup(out_shape_);
+    int utility_memory_size = out_shape_.h_ * out_shape_.w_ * kernel_size_ *
+            kernel_size_ * out_shape_.c_;
+    return utility_memory_size;
 }
 
 int ConvolutionLayer::load_pretrained(std::ifstream &weights_file) {
@@ -42,8 +54,3 @@ void ConvolutionLayer::print_info() const {
     std::cout << "OUTPUT TENSOR: "  << out_shape_ << "\n";
     std::cout << "------------------------\n";
 }
-
-
-
-
-

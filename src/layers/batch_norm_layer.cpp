@@ -2,10 +2,9 @@
 #include "operations/tensor_math.h"
 #include <iostream>
 
-void BatchNormLayer::forward(std::vector<float> *input_tensor,
-                             std::vector<float> *output_tensor)
+std::vector<float> *BatchNormLayer::forward(std::vector<float> *input_tensor,
+                                            std::vector<float> &utility_memory)
 {
-    output_tensor = input_tensor;
     normalize(*input_tensor, rolling_mean_, rolling_variance_,
               in_shape_.c_, in_shape_.h_ * in_shape_.w_);
     scale(*input_tensor, gamma_,
@@ -13,6 +12,7 @@ void BatchNormLayer::forward(std::vector<float> *input_tensor,
     add_bias(*input_tensor, beta_,
           in_shape_.c_, in_shape_.h_ * in_shape_.w_);
     print_info();
+    return input_tensor;
 }
 
 int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
@@ -32,7 +32,7 @@ int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
     return 0;
 }
 
-void BatchNormLayer::setup(const Shape &shape)
+int BatchNormLayer::setup(const Shape &shape)
 {
     in_shape_ = shape;
     out_shape_ = shape;
@@ -40,6 +40,7 @@ void BatchNormLayer::setup(const Shape &shape)
     rolling_variance_.reserve(shape.c_);
     gamma_.reserve(shape.c_);
     beta_.reserve(shape.c_);
+    return 0;
 }
 
 void BatchNormLayer::print_info() const

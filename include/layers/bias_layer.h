@@ -8,26 +8,29 @@ public:
     BiasLayer(): Layer(LayerParameters(LayerType::BIAS,true)) {}
     ~BiasLayer() override {};
 
-    std::vector<float> *forward(std::vector<float> *input_tensor)  override
+    std::vector<float> *forward(std::vector<float> *input_tensor,
+                                std::vector<float> &utility_memory)  override
     {
-        output_tensor = input_tensor;
         std::vector<float> &input = *input_tensor;
         add_bias(input, bias_, in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+        return input_tensor;
     }
 
-    inline void setup(const Shape &shape)
+    inline int setup(const Shape &shape)
     {
         in_shape_ = shape;
         out_shape_ = shape;
         bias_.reserve(shape.c_);
-    };
+        return 0;
+    }
+
     int load_pretrained(std::ifstream &weights_file) override
     {
         if(!weights_file.read(reinterpret_cast<char*>(bias_.data()),
                               out_shape_.c_ * sizeof(float)))
             return 1;
         return 0;
-    };
+    }
 
     inline void print_info() const override
     {

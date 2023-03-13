@@ -1,5 +1,8 @@
 #include "layers/network.h"
 #include <fstream>
+#include <algorithm>
+
+
 Network::~Network()
 {
     for (int i = 0; i < layers_.size(); i++) {
@@ -10,9 +13,9 @@ Network::~Network()
 std::vector<float>* Network::forward(std::vector<float>* input_image)
 {
     std::vector<float> *tensor;
-    tensor = layers_[0]->forward(input_image);
+    tensor = layers_[0]->forward(input_image, utility_memory);
     for (int i = 1; i < layers_.size(); i++) {
-        tensor = layers_[i]->forward(tensor);
+        tensor = layers_[i]->forward(tensor, utility_memory);
     }
     return tensor;
 }
@@ -20,10 +23,13 @@ std::vector<float>* Network::forward(std::vector<float>* input_image)
 void Network::setup()
 {
     Shape input_layer_shape = image_shape;
+    int utility_memory_size = 0;
     for (int i = 0; i < layers_.size(); i++) {
-        layers_[i]->setup(input_layer_shape);
+        int temp = layers_[i]->setup(input_layer_shape);
+        utility_memory_size = std::max(temp, utility_memory_size);
         input_layer_shape = layers_[i]->out_shape();
     }
+    utility_memory.reserve(utility_memory_size);
 }
 
 int Network::load_pretrained(const std::string &filename)

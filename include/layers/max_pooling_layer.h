@@ -11,9 +11,9 @@ public:
                                                                Layer(LayerParameters(LayerType::MAX_POOLING,false)) {}
     ~MaxPollingLayer() override {};
 
-    void forward(std::vector<float> *input_tensor,
-                 std::vector<float> *output_tensor) override;
-    void setup(const Shape &shape) override;
+    std::vector<float> *forward(std::vector<float> *input_tensor,
+                                std::vector<float> &utility_memory) override;
+    int setup(const Shape &shape) override;
     void print_info() const override;
 
     inline MaxPollingLayer* clone() const override {
