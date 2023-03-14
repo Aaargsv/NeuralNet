@@ -6,13 +6,14 @@
 
 class UpsampleLayer: public Layer {
 public:
-    UpsampleLayer(int stride): stride_(stride) {}
+    UpsampleLayer(int stride): stride_(stride),
+                               Layer(LayerParameters(LayerType::UPSAMPLE,false)) {}
     ~UpsampleLayer() override {}
     std::vector<float> *forward(std::vector<float> *input_tensor,
                                 std::vector<float> &utility_memory) override;
     int setup(const Shape &shape) override;
     void print_info() const override;
-    
+
     inline UpsampleLayer* clone() const override {
         return new UpsampleLayer(*this);
     }
@@ -26,7 +27,11 @@ protected:
     int stride_;
     /// Output feature maps
     std::vector<float> outputs_;
-
+private:
+    int load_pretrained(std::ifstream &weights_file) override
+    {
+        return 0;
+    };
 };
 
 #endif //UPSAMPLE_LAYER_H

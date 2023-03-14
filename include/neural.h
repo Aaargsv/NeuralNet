@@ -33,6 +33,7 @@ public:
 enum class LayerType {
     CONVOLUTION,
     MAX_POOLING,
+    UPSAMPLE,
     BATCH_NORM,
     BIAS,
     LEAKY_ReLU,
