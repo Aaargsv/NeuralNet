@@ -55,4 +55,9 @@ protected:
     std::vector<float> outputs_;
 };
 
+(h / stride) * width
+(h * width) / stride
+
+
+
 #endif //CONVOLUTION_LAYER_H
