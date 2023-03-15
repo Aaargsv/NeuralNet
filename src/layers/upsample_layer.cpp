@@ -19,7 +19,7 @@ int UpsampleLayer::setup(const Shape &shape)
 void UpsampleLayer::print_info() const
 {
 
-    
+
 }
 
 
