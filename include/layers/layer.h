@@ -2,6 +2,7 @@
 #define LAYER_H
 
 #include "neural.h"
+#include "nnfwd.h"
 #include <vector>
 #include <fstream>
 
