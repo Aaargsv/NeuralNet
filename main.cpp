@@ -1,4 +1,4 @@
-#include "layers/network.h"
+#include "network.h"
 #include "layers/convolution_layer.h"
 #include "layers/max_pooling_layer.h"
 #include "include/layers/leaky_relu_layer.h"

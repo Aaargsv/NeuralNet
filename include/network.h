@@ -2,7 +2,7 @@
 #define NETWORK_H
 
 #include "neural.h"
-#include "layer.h"
+#include "layers/layer.h"
 #include <vector>
 #include <string>
 
@@ -23,5 +23,15 @@ protected:
     /// Network layers
     std::vector<Layer*> layers_;
     std::vector<float> utility_memory;
+    std::vector<float> *current_tensor;
+
+    friend class Layer;
+    friend class ActivationLayer;
+    friend class BatchNormLayer;
+    friend class BiasLayer;
+    friend class ConvolutionLayer;
+    friend class LeakyReluLayer;
+    friend class MaxPollingLayer;
+    friend class UpsampleLayer;
 };
 #endif //NETWORK_H

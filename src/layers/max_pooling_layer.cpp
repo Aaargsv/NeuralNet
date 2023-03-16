@@ -1,15 +1,15 @@
 #include "layers/max_pooling_layer.h"
 #include "operations/max_pool.h"
 #include "utils/utils.h"
+#include "network.h"
 #include <iostream>
 
-std::vector<float> *MaxPollingLayer::forward(std::vector<float> *input_tensor,
-                                             std::vector<float> &utility_memory) {
-    std::vector<float> &input = *input_tensor;
+void MaxPollingLayer::forward(Network &net) {
+    std::vector<float> &input = *net.current_tensor;
     max_pool(input, in_shape_.c_, in_shape_.h_, in_shape_.w_,
              window_size_, stride_, padding_, outputs_);
+    net.current_tensor = &outputs_;
     print_info();
-    return &outputs_;
 }
 
 int MaxPollingLayer::setup(const Shape &shape) {
@@ -29,5 +29,22 @@ void MaxPollingLayer::print_info() const {
     std::cout << "------------------------\n";
 }
 
+MaxPollingLayer *MaxPollingLayer::clone() const
+{
+    return new MaxPollingLayer(*this);
+}
+int MaxPollingLayer::compute_out_width() const
+{
+    return (in_shape_.w_ + padding_ - window_size_) / stride_ + 1;
+}
+int MaxPollingLayer::compute_out_height() const
+{
+    return (in_shape_.h_ + padding_ - window_size_) / stride_ + 1;
+}
+
+int MaxPollingLayer::load_pretrained(std::ifstream &weights_file)
+{
+    return 0;
+};
 
 

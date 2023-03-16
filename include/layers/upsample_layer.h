@@ -9,29 +9,17 @@ public:
     UpsampleLayer(int stride): stride_(stride),
                                Layer(LayerParameters(LayerType::UPSAMPLE,false)) {}
     ~UpsampleLayer() override {}
-    std::vector<float> *forward(std::vector<float> *input_tensor,
-                                std::vector<float> &utility_memory) override;
+    void forward(Network &net) override;
     int setup(const Shape &shape) override;
     void print_info() const override;
-
-    inline UpsampleLayer* clone() const override {
-        return new UpsampleLayer(*this);
-    }
-    inline int compute_out_width() {
-        return in_shape_.w_ * stride_;
-    }
-    inline int compute_out_height() {
-        return in_shape_.h_ * stride_;
-    }
+    UpsampleLayer* clone() const override;
+    int compute_out_width() const;
+    int compute_out_height() const;
+    int load_pretrained(std::ifstream &weights_file) override;
 protected:
     int stride_;
     /// Output feature maps
     std::vector<float> outputs_;
-private:
-    int load_pretrained(std::ifstream &weights_file) override
-    {
-        return 0;
-    };
 };
 
 #endif //UPSAMPLE_LAYER_H

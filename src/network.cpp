@@ -1,4 +1,4 @@
-#include "layers/network.h"
+#include "network.h"
 #include <fstream>
 #include <algorithm>
 
@@ -12,12 +12,11 @@ Network::~Network()
 
 std::vector<float>* Network::forward(std::vector<float>* input_image)
 {
-    std::vector<float> *tensor;
-    tensor = layers_[0]->forward(input_image, utility_memory);
-    for (int i = 1; i < layers_.size(); i++) {
-        tensor = layers_[i]->forward(tensor, utility_memory);
+    current_tensor = input_image;
+    for (int i = 0; i < layers_.size(); i++) {
+        layers_[i]->forward(*this);
     }
-    return tensor;
+    return current_tensor;
 }
 
 void Network::setup()

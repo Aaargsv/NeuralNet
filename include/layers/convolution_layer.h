@@ -21,24 +21,13 @@ public:
        delete inter_layer;
     }
 
-    std::vector<float>* forward(std::vector<float> *input_tensor,
-                                std::vector<float> &utility_memory) override;
+    void forward(Network &net) override;
     int load_pretrained(std::ifstream &input_file) override;
     int setup(const Shape &shape) override;
     void print_info() const override;
-
-    inline int compute_out_height() const {
-        return (in_shape_.h_ + 2 * padding_ - kernel_size_) / stride_ + 1;
-    }
-
-    inline int compute_out_width() const {
-        return (in_shape_.w_ + 2 * padding_ - kernel_size_) / stride_ + 1;
-    }
-
-    inline ConvolutionLayer* clone() const override {
-        return new ConvolutionLayer(*this);
-    }
-
+    int compute_out_height() const;
+    int compute_out_width() const;
+    ConvolutionLayer* clone() const override;
 
 protected:
     /// False - Bias. True - Batch_norm.
@@ -54,10 +43,5 @@ protected:
     std::vector<float> weights_;
     std::vector<float> outputs_;
 };
-
-(h / stride) * width
-(h * width) / stride
-
-
 
 #endif //CONVOLUTION_LAYER_H

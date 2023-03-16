@@ -1,18 +1,18 @@
 #include "layers/batch_norm_layer.h"
+#include "network.h"
 #include "operations/tensor_math.h"
 #include <iostream>
 
-std::vector<float> *BatchNormLayer::forward(std::vector<float> *input_tensor,
-                                            std::vector<float> &utility_memory)
+void BatchNormLayer::forward(Network &net)
 {
-    normalize(*input_tensor, rolling_mean_, rolling_variance_,
+    std::vector<float> &input = *net.current_tensor;
+    normalize(input, rolling_mean_, rolling_variance_,
               in_shape_.c_, in_shape_.h_ * in_shape_.w_);
-    scale(*input_tensor, gamma_,
+    scale(input, gamma_,
               in_shape_.c_, in_shape_.h_ * in_shape_.w_);
-    add_bias(*input_tensor, beta_,
+    add_bias(input, beta_,
           in_shape_.c_, in_shape_.h_ * in_shape_.w_);
     print_info();
-    return input_tensor;
 }
 
 int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
@@ -50,3 +50,8 @@ void BatchNormLayer::print_info() const
     std::cout << "OUTPUT TENSOR: " << out_shape_ << "\n";
     std::cout << "------------------------\n";
 }
+
+BatchNormLayer *BatchNormLayer::clone() const
+{
+    return new BatchNormLayer(*this);
+};

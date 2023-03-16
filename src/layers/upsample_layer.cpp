@@ -1,12 +1,12 @@
 #include "layers/upsample_layer.h"
 #include "operations/upsampling.h"
+#include "network.h"
 
-std::vector<float> *UpsampleLayer::forward(std::vector<float> *input_tensor,
-                                           std::vector<float> &utility_memory)
+void UpsampleLayer::forward(Network &net)
 {
-    std::vector<float> &input = *input_tensor;
+    std::vector<float> &input = *net.current_tensor;
     upsample(input, in_shape_.c_, in_shape_.h_, in_shape_.w_, stride_, outputs_);
-    return &outputs_;
+    net.current_tensor = &outputs_;
 }
 
 int UpsampleLayer::setup(const Shape &shape)
@@ -22,6 +22,25 @@ void UpsampleLayer::print_info() const
 
 }
 
+UpsampleLayer *UpsampleLayer::clone() const
+{
+    return new UpsampleLayer(*this);
+}
+
+int UpsampleLayer::compute_out_width() const
+{
+    return in_shape_.w_ * stride_;
+}
+
+int UpsampleLayer::compute_out_height() const
+{
+    return in_shape_.h_ * stride_;
+}
+
+int UpsampleLayer::load_pretrained(std::ifstream &weights_file)
+{
+    return 0;
+};
 
 
 

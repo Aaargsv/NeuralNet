@@ -1,22 +1,23 @@
 #include "layers/convolution_layer.h"
 #include "operations/convolution.h"
 #include "utils/utils.h"
+#include "network.h"
 #include <iostream>
 
-std::vector<float> *ConvolutionLayer::forward(std::vector<float> *input_tensor,
-                                              std::vector<float> &utility_memory) {
-
-    std::vector<float> &input = *input_tensor;
+void ConvolutionLayer::forward(Network &net)
+{
+    std::vector<float> &input = *net.current_tensor;
     convolution(input, in_shape_.c_, in_shape_.h_, in_shape_.w_,
                 kernel_size_, stride_, padding_, weights_, out_shape_.c_,
-                utility_memory, out_shape_.h_, out_shape_.w_, outputs_);
-    inter_layer->forward(&outputs_, utility_memory);
+                net.utility_memory, out_shape_.h_, out_shape_.w_, outputs_);
+    net.current_tensor = &outputs_;
+    inter_layer->forward(net);
     print_info();
     inter_layer->print_info();
-    return &outputs_;
 }
 
-int ConvolutionLayer::setup(const Shape &shape) {
+int ConvolutionLayer::setup(const Shape &shape)
+{
     in_shape_ = shape;
     weights_length_ = kernel_size_ * kernel_size_ * filters_;
     out_shape_.reshape(compute_out_height(), compute_out_width(), filters_);
@@ -32,7 +33,8 @@ int ConvolutionLayer::setup(const Shape &shape) {
     return utility_memory_size;
 }
 
-int ConvolutionLayer::load_pretrained(std::ifstream &weights_file) {
+int ConvolutionLayer::load_pretrained(std::ifstream &weights_file)
+{
 
     if ( inter_layer->load_pretrained(weights_file))
         return 1;
@@ -44,7 +46,8 @@ int ConvolutionLayer::load_pretrained(std::ifstream &weights_file) {
     return 0;
 }
 
-void ConvolutionLayer::print_info() const {
+void ConvolutionLayer::print_info() const
+{
     std::cout << "LAYER NAME: CONVOLUTION\n";
     std::cout << "KERNEL SIZE: "    << kernel_size_ << "\n";
     std::cout << "FILTERS: "        << filters_ << "\n";
@@ -53,4 +56,19 @@ void ConvolutionLayer::print_info() const {
     std::cout << "INPUT TENSOR: "   << in_shape_ << "\n";
     std::cout << "OUTPUT TENSOR: "  << out_shape_ << "\n";
     std::cout << "------------------------\n";
+}
+
+int ConvolutionLayer::compute_out_height() const
+{
+    return (in_shape_.h_ + 2 * padding_ - kernel_size_) / stride_ + 1;
+}
+
+int ConvolutionLayer::compute_out_width() const
+{
+    return (in_shape_.w_ + 2 * padding_ - kernel_size_) / stride_ + 1;
+}
+
+ConvolutionLayer *ConvolutionLayer::clone() const
+{
+    return new ConvolutionLayer(*this);
 }

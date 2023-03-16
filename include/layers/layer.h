@@ -11,8 +11,7 @@ public:
     Layer(const LayerParameters &layer_param): layer_param_(layer_param) {}
     virtual ~Layer() {};
 
-    virtual std::vector<float> *forward(std::vector<float> *input_tensor,
-                                        std::vector<float> &utility_memory) = 0;
+    virtual void forward(Network &net) = 0;
 
     /**
     * @brief Initialize layer in_shape, compute out_shape,
