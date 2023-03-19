@@ -40,11 +40,11 @@ MaxPollingLayer *MaxPollingLayer::clone() const
 }
 int MaxPollingLayer::compute_out_width() const
 {
-    return (in_shape_.w_ + padding_ - window_size_) / stride_ + 1;
+    return (in_shape_.w_ + 2 * padding_ - window_size_) / stride_ + 1;
 }
 int MaxPollingLayer::compute_out_height() const
 {
-    return (in_shape_.h_ + padding_ - window_size_) / stride_ + 1;
+    return (in_shape_.h_ + 2 * padding_ - window_size_) / stride_ + 1;
 }
 
 int MaxPollingLayer::load_pretrained(std::ifstream &weights_file)
