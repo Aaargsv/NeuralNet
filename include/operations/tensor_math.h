@@ -11,4 +11,7 @@ void scale(std::vector<T> &tensor, const std::vector<T> &scales, int channels, i
 void normalize(std::vector<float> &tensor, const std::vector<float> &rolling_mean,
                const std::vector<float> &rolling_variance, int channels, int size);
 
+void concatenate(std::vector<float> &dst, const std::vector<float> &src);
+
+
 #endif //TENSOR_MATH_H

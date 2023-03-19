@@ -34,4 +34,9 @@ void normalize(std::vector<float> &tensor, const std::vector<float> &rolling_mea
     }
 }
 
+void concatenate(std::vector<float> &dst, const std::vector<float> &src)
+{
+    dst.insert(dst.end(), src.begin(), src.end());
+}
+
 

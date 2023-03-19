@@ -1,14 +1,13 @@
 #include "layers/concatenation_layer.h"
 #include "network.h"
+#include "operations/tensor_math.h"
 
 
 void ConcatenationLayer::forward(Network &net)
 {
     std::vector<Layer*> layers = net.layers_;
     for (int i = 0; i < indexes_.size(); i++) {
-        outputs_.insert(outputs_.end(),
-                        layers[indexes_[i]]->get_outputs().begin(),
-                        layers[indexes_[i]]->get_outputs().end());
+        concatenate(outputs_, layers[indexes_[i]]->get_outputs());
     }
     print_info();
 }
