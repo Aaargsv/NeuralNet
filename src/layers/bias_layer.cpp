@@ -6,9 +6,10 @@ void BiasLayer::forward(Network &net)
 {
     std::vector<float> &input = *net.current_tensor;
     add_bias(input, bias_, in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+    ouputs_ptr = net.current_tensor;
 }
 
-int BiasLayer::setup(const Shape &shape)
+int BiasLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_ = shape;
@@ -21,6 +22,11 @@ int BiasLayer::load_pretrained(std::ifstream &weights_file)
     if(!weights_file.read(reinterpret_cast<char*>(bias_.data()), out_shape_.c_ * sizeof(float)))
         return 1;
     return 0;
+}
+
+const std::vector<float> &BiasLayer::get_outputs()
+{
+    return *ouputs_ptr;
 }
 
 void BiasLayer::print_info() const

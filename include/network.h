@@ -14,7 +14,7 @@ public:
         layers_.push_back(layer);
     }
     std::vector<float>* forward(std::vector<float> *input_image);
-    void setup();
+    int setup();
     int load_pretrained(const std::string &filename);
     friend Network& operator<<(Network &net, const Layer &layer);
 protected:
@@ -33,5 +33,6 @@ protected:
     friend class LeakyReluLayer;
     friend class MaxPollingLayer;
     friend class UpsampleLayer;
+    friend class ConcatenationLayer;
 };
 #endif //NETWORK_H

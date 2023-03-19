@@ -16,7 +16,7 @@ void ConvolutionLayer::forward(Network &net)
     inter_layer->print_info();
 }
 
-int ConvolutionLayer::setup(const Shape &shape)
+int ConvolutionLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     weights_length_ = kernel_size_ * kernel_size_ * filters_;
@@ -27,10 +27,15 @@ int ConvolutionLayer::setup(const Shape &shape)
         inter_layer = new BatchNormLayer();
     else
         inter_layer = new BiasLayer();
-    inter_layer->setup(out_shape_);
+    inter_layer->setup(out_shape_, net);
     int utility_memory_size = out_shape_.h_ * out_shape_.w_ * kernel_size_ *
             kernel_size_ * out_shape_.c_;
     return utility_memory_size;
+}
+
+const std::vector<float> &ConvolutionLayer::get_outputs()
+{
+    return outputs_;
 }
 
 int ConvolutionLayer::load_pretrained(std::ifstream &weights_file)

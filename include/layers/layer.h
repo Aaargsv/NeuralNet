@@ -18,13 +18,15 @@ public:
     *        allocate resources.
     * @return utility memory size
     */
-    virtual int setup(const Shape &shape) = 0;
+    virtual int setup(const Shape &shape, const Network &net) = 0;
     virtual int load_pretrained(std::ifstream &weights_file) = 0;
     virtual Layer *clone() const = 0;
     virtual void print_info() const = 0;
+    virtual const std::vector<float> &get_outputs() = 0;
     virtual int get_utility_memory_size() const {
         return 0;
     };
+
 
     inline const LayerParameters &layer_param() const {
         return layer_param_;

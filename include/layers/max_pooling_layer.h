@@ -11,7 +11,8 @@ public:
                                                                Layer(LayerParameters(LayerType::MAX_POOLING,false)) {}
     ~MaxPollingLayer() override {};
     void forward(Network &net) override;
-    int setup(const Shape &shape) override;
+    int setup(const Shape &shape, const Network &net) override;
+    const std::vector<float> &get_outputs() override;
     void print_info() const override;
     inline MaxPollingLayer* clone() const override;
     int compute_out_width() const;

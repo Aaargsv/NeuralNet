@@ -9,10 +9,13 @@ public:
     ActivationLayer(const LayerParameters &layer_param): Layer(layer_param) {}
     ~ActivationLayer() {}
     void forward(Network &net) override;
-    int setup(const Shape &shape) override;
+    int setup(const Shape &shape, const Network &net) override;
+    const std::vector<float> &get_outputs() override;
+
 
 protected:
     virtual float activation(float x) const = 0;
+    std::vector<float> *ouputs_ptr;
 private:
     int load_pretrained(std::ifstream &input_file) override;
 };

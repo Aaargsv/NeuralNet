@@ -10,7 +10,8 @@ public:
                                Layer(LayerParameters(LayerType::UPSAMPLE,false)) {}
     ~UpsampleLayer() override {}
     void forward(Network &net) override;
-    int setup(const Shape &shape) override;
+    int setup(const Shape &shape, const Network &net) override;
+    const std::vector<float> &get_outputs() override;
     void print_info() const override;
     UpsampleLayer* clone() const override;
     int compute_out_width() const;

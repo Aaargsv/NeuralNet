@@ -6,10 +6,10 @@ void ActivationLayer::forward(Network &net) {
     for (int i = 0; i < input.size(); i++) {
         input[i] = activation(input[i]);
     }
-
+    ouputs_ptr = net.current_tensor;
 }
 
-int ActivationLayer::setup(const Shape &shape)
+int ActivationLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_ = shape;
@@ -19,5 +19,10 @@ int ActivationLayer::setup(const Shape &shape)
 int ActivationLayer::load_pretrained(std::ifstream &input_file)
 {
     return 0;
+}
+
+const std::vector<float> &ActivationLayer::get_outputs()
+{
+    return *ouputs_ptr;
 }
 

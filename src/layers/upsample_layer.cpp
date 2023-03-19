@@ -9,13 +9,19 @@ void UpsampleLayer::forward(Network &net)
     net.current_tensor = &outputs_;
 }
 
-int UpsampleLayer::setup(const Shape &shape)
+int UpsampleLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_.reshape(compute_out_height(), compute_out_width(), shape.c_);
     outputs_.reserve(out_shape_.get_size());
     return 0;
 }
+
+const std::vector<float> &UpsampleLayer::get_outputs()
+{
+    return outputs_;
+}
+
 void UpsampleLayer::print_info() const
 {
 

@@ -12,6 +12,7 @@ void BatchNormLayer::forward(Network &net)
               in_shape_.c_, in_shape_.h_ * in_shape_.w_);
     add_bias(input, beta_,
           in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+    ouputs_ptr = net.current_tensor;
     print_info();
 }
 
@@ -32,7 +33,7 @@ int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
     return 0;
 }
 
-int BatchNormLayer::setup(const Shape &shape)
+int BatchNormLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_ = shape;
@@ -42,6 +43,12 @@ int BatchNormLayer::setup(const Shape &shape)
     beta_.reserve(shape.c_);
     return 0;
 }
+
+const std::vector<float> &BatchNormLayer::get_outputs()
+{
+    return *ouputs_ptr;
+}
+
 
 void BatchNormLayer::print_info() const
 {

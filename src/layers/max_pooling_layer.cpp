@@ -12,11 +12,16 @@ void MaxPollingLayer::forward(Network &net) {
     print_info();
 }
 
-int MaxPollingLayer::setup(const Shape &shape) {
+int MaxPollingLayer::setup(const Shape &shape, const Network &net) {
     in_shape_ = shape;
     out_shape_.reshape(compute_out_height(), compute_out_width(), shape.c_);
     outputs_.reserve(out_shape_.get_size());
     return 0;
+}
+
+const std::vector<float> &MaxPollingLayer::get_outputs()
+{
+    return outputs_;
 }
 
 void MaxPollingLayer::print_info() const {

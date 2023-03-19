@@ -10,15 +10,18 @@ public:
     BatchNormLayer(): Layer(LayerParameters(LayerType::BATCH_NORM,true)) {}
     ~BatchNormLayer() override {};
     void forward(Network &net)  override;
-    int setup(const Shape &shape) override;
+    int setup(const Shape &shape, const Network &net) override;
     int load_pretrained(std::ifstream &input_file) override;
+    const std::vector<float> &get_outputs() override;
     void print_info() const override;
     BatchNormLayer* clone() const override;
+
 protected:
     std::vector<float> rolling_mean_;
     std::vector<float> rolling_variance_;
     std::vector<float> gamma_;
     std::vector<float> beta_;
+    std::vector<float> *ouputs_ptr;
 };
 
 #endif //BATCH_NORM_LAYER_H

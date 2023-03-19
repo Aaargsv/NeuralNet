@@ -19,12 +19,15 @@ std::vector<float>* Network::forward(std::vector<float>* input_image)
     return current_tensor;
 }
 
-void Network::setup()
+int Network::setup()
 {
     Shape input_layer_shape = image_shape;
     int utility_memory_size = 0;
+    int temp;
     for (int i = 0; i < layers_.size(); i++) {
-        int temp = layers_[i]->setup(input_layer_shape);
+        if ((temp = layers_[i]->setup(input_layer_shape, *this)) < 0) {
+            return 1;
+        }
         utility_memory_size = std::max(temp, utility_memory_size);
         input_layer_shape = layers_[i]->out_shape();
     }

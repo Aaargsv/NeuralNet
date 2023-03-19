@@ -9,31 +9,41 @@ public:
     int c_;
 
     Shape(): h_(0), w_(0), c_(0) {}
-    Shape(int h, int w, int c) {
+    Shape(int h, int w, int c)
+    {
         reshape(h, w, c);
     }
 
-    void reshape(int h, int w, int c) {
+    void reshape(int h, int w, int c)
+    {
         h_ = h;
         w_ = w;
         c_ = c;
     }
 
-    int get_size() {
+    int get_size()
+    {
         return h_ * w_ * c_;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Shape &shape) {
-        os << "(" << shape.h_ << ", " << shape.w_ << ", " << shape.c_ << ")";
-        return os;
-    }
 };
 
+std::ostream& operator<<(std::ostream& os, const Shape &shape)
+{
+    os << "(" << shape.h_ << ", " << shape.w_ << ", " << shape.c_ << ")";
+    return os;
+}
+
+bool is_HxW_equal(const Shape &shape1, const Shape &shape2)
+{
+    return ((shape1.h_ == shape2.h_) && (shape1.w_ == shape2.w_));
+}
 
 enum class LayerType {
     CONVOLUTION,
     MAX_POOLING,
     UPSAMPLE,
+    CONCATENATION,
     BATCH_NORM,
     BIAS,
     LEAKY_ReLU,
