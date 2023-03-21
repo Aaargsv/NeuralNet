@@ -14,14 +14,11 @@ public:
     int setup(const Shape &shape, const Network &net) override;
     const std::vector<float> &get_outputs() override;
     void print_info() const override;
-    int compute_out_height() const;
-    int compute_out_width() const;
     ConcatenationLayer* clone() const override;
 
 protected:
     std::vector<int> indexes_;
     std::vector<float> outputs_;
 };
-
 
 #endif //CONCATENATION_LAYER_H

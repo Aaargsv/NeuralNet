@@ -39,11 +39,18 @@ bool is_HxW_equal(const Shape &shape1, const Shape &shape2)
     return ((shape1.h_ == shape2.h_) && (shape1.w_ == shape2.w_));
 }
 
+bool is_tensor_sizes_equal(const Shape &shape1, const Shape &shape2)
+{
+    return ((shape1.h_ == shape2.h_) && (shape1.w_ == shape2.w_) &&
+            (shape1.c_ == shape2.c_));
+}
+
 enum class LayerType {
     CONVOLUTION,
     MAX_POOLING,
     UPSAMPLE,
     CONCATENATION,
+    SHORTCUT,
     BATCH_NORM,
     BIAS,
     LEAKY_ReLU,

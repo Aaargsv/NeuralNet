@@ -13,5 +13,9 @@ void normalize(std::vector<float> &tensor, const std::vector<float> &rolling_mea
 
 void concatenate(std::vector<float> &dst, const std::vector<float> &src);
 
+void add_tensors(const std::vector<float> &a, const std::vector<float> &b,
+                 int size, std::vector<float> &c);
+
+
 
 #endif //TENSOR_MATH_H

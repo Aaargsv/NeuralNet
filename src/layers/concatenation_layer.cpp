@@ -43,14 +43,6 @@ ConcatenationLayer *ConcatenationLayer::clone() const
 {
     return new ConcatenationLayer(*this);
 }
-int ConcatenationLayer::compute_out_width() const
-{
-    return (in_shape_.w_ + padding_ - window_size_) / stride_ + 1;
-}
-int ConcatenationLayer::compute_out_height() const
-{
-    return (in_shape_.h_ + padding_ - window_size_) / stride_ + 1;
-}
 
 int ConcatenationLayer::load_pretrained(std::ifstream &weights_file)
 {

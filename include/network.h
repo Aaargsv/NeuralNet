@@ -34,5 +34,6 @@ protected:
     friend class MaxPollingLayer;
     friend class UpsampleLayer;
     friend class ConcatenationLayer;
+    friend class ShortcutLayer;
 };
 #endif //NETWORK_H

@@ -39,4 +39,12 @@ void concatenate(std::vector<float> &dst, const std::vector<float> &src)
     dst.insert(dst.end(), src.begin(), src.end());
 }
 
+void add_tensors(const std::vector<float> &a, const std::vector<float> &b,
+                 int size, std::vector<float> &c)
+{
+    for (int i = 0; i < size; i++) {
+        c[i] = a[i] + b[i];
+    }
+}
+
 
