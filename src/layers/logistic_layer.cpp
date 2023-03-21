@@ -16,5 +16,5 @@ void LogisticLayer::print_info() const
 
 LogisticLayer *LogisticLayer::clone() const
 {
-    return new LeakyReluLayer(*this);
+    return new LogisticLayer(*this);
 }
