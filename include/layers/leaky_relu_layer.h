@@ -1,8 +1,8 @@
 #ifndef LEAKY_RELU_LAYER_H
 #define LEAKY_RELU_LAYER_H
 
-#include "layer.h"
-#include "activation_layer.h"
+#include "layers/layer.h"
+#include "layers/activation_layer.h"
 
 class LeakyReluLayer: public ActivationLayer {
 public:

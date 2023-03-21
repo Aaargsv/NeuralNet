@@ -54,6 +54,7 @@ enum class LayerType {
     BATCH_NORM,
     BIAS,
     LEAKY_ReLU,
+    LOGISTIC
 };
 
 class LayerParameters {
