@@ -8,7 +8,7 @@
 
 class Network {
 public:
-    Network(int width, int height, int channels): image_shape_(width, height, channels) {}
+    Network(int width, int height, int channels): net_shape_(width, height, channels) {}
     ~Network();
     inline void add_layer(Layer *layer) {
         layers_.push_back(layer);
@@ -16,6 +16,8 @@ public:
     std::vector<float>* forward(std::vector<float> *input_image);
     int setup();
     int load_pretrained(const std::string &filename);
+    void gather_bounding_boxes();
+    void nms();
     friend Network& operator<<(Network &net, const Layer &layer);
 protected:
     /// Input image shape
@@ -24,7 +26,9 @@ protected:
     std::vector<Layer*> layers_;
     std::vector<float> utility_memory;
     std::vector<float> *current_tensor;
+    BoundingBoxes bounding_boxes_;
 
+    int num_classes_;
 
     friend class Layer;
     friend class ActivationLayer;

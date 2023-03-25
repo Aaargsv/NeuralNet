@@ -22,7 +22,6 @@ public:
     int get_element_pos(int number_of_anchor, int component_index, int cell_h, int cell_w) const;
     void get_bounding_boxes(BoundingBoxes &bounding_boxes, int net_height, int net_width) const;
     int get_number_detection() const;
-    void get_bounding_boxes(BoundingBoxes &bounding_boxes) const;
 protected:
     int number_of_anchor_boxes_;
     int classes_;

@@ -21,6 +21,7 @@ protected:
     int stride_;
     /// Output feature maps
     std::vector<float> outputs_;
+
 };
 
 #endif //UPSAMPLE_LAYER_H

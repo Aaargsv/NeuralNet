@@ -1,4 +1,5 @@
 #include "network.h"
+#include "layers/yolo_layer.h"
 #include <fstream>
 #include <algorithm>
 
@@ -21,7 +22,7 @@ std::vector<float>* Network::forward(std::vector<float>* input_image)
 
 int Network::setup()
 {
-    Shape input_layer_shape = image_shape;
+    Shape input_layer_shape = net_shape_;
     int utility_memory_size = 0;
     int temp;
     for (int i = 0; i < layers_.size(); i++) {
@@ -46,6 +47,22 @@ int Network::load_pretrained(const std::string &filename)
         }
     }
     return 0;
+}
+
+void Network::gather_bounding_boxes()
+{
+    bounding_boxes_.reserve(num_classes_);
+    for (int i = 0; i < layers_.size(); i++) {
+        if (layers_[i]->layer_param().layer_type_ == LayerType::YOLO) {
+            static_cast<YoloLayer*>(layers_[i])->get_bounding_boxes(bounding_boxes_,
+                                                                    net_shape_.h, net_shape_.w);
+        }
+    }
+}
+
+void Network::nms()
+{
+    
 }
 
 Network& operator<<(Network &net, const Layer &layer)

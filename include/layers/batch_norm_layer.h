@@ -22,6 +22,7 @@ protected:
     std::vector<float> gamma_;
     std::vector<float> beta_;
     std::vector<float> *ouputs_ptr;
+
 };
 
 #endif //BATCH_NORM_LAYER_H

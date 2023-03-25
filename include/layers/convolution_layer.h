@@ -43,6 +43,7 @@ protected:
     Layer *inter_layer;
     std::vector<float> weights_;
     std::vector<float> outputs_;
+
 };
 
 #endif //CONVOLUTION_LAYER_H

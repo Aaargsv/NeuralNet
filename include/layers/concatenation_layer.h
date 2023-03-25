@@ -19,6 +19,7 @@ public:
 protected:
     std::vector<int> indexes_;
     std::vector<float> outputs_;
+
 };
 
 #endif //CONCATENATION_LAYER_H

@@ -6,7 +6,7 @@
 
 class LogisticLayer: public ActivationLayer {
 public:
-    LogisticLayer(): LogisticLayer(LayerParameters(LayerType::LOGISTIC,false)) {}
+    LogisticLayer(): ActivationLayer(LayerParameters(LayerType::LOGISTIC,false)) {}
     float activation(float x) const override;
     void print_info() const override;
     LogisticLayer* clone() const override;

@@ -23,6 +23,7 @@ protected:
     int index_;
     int prev_layer_index_;
     std::vector<float> outputs_;
+
 };
 
 #endif //HORTCUT_LAYER_H
