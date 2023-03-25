@@ -5,7 +5,7 @@
 void BiasLayer::forward(Network &net)
 {
     std::vector<float> &input = *net.current_tensor;
-    add_bias(input, bias_, in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+    add_bias(input, bias_, in_shape_.c, in_shape_.h * in_shape_.w);
     ouputs_ptr = net.current_tensor;
 }
 
@@ -13,7 +13,7 @@ int BiasLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_ = shape;
-    bias_.reserve(shape.c_);
+    bias_.reserve(shape.c);
     return 0;
 }
 

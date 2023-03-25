@@ -21,7 +21,7 @@ int ConcatenationLayer::setup(const Shape &shape, const Network &net)
         if(!is_HxW_equal(out_shape, tmp_shape)) {
             return -1;
         }
-        out_shape.c_ += tmp_shape.c_;
+        out_shape.c += tmp_shape.c;
     }
 
     out_shape_ = out_shape;

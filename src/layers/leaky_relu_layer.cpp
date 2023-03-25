@@ -1,9 +1,11 @@
 #include "layers/leaky_relu_layer.h"
+#include "operations/activation_functions.h"
 #include <iostream>
+
 
 float LeakyReluLayer::activation(float x) const
 {
-    return x > 0 ? x : 0.1 * x;
+    return leaky_relu(x);
 }
 
 void LeakyReluLayer::print_info() const

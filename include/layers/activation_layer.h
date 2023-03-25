@@ -15,7 +15,7 @@ public:
 
 protected:
     virtual float activation(float x) const = 0;
-    std::vector<float> *ouputs_ptr;
+    std::vector<float> *outputs_ptr_;
 private:
     int load_pretrained(std::ifstream &input_file) override;
 };

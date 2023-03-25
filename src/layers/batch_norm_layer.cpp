@@ -7,11 +7,11 @@ void BatchNormLayer::forward(Network &net)
 {
     std::vector<float> &input = *net.current_tensor;
     normalize(input, rolling_mean_, rolling_variance_,
-              in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+              in_shape_.c, in_shape_.h * in_shape_.w);
     scale(input, gamma_,
-              in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+              in_shape_.c, in_shape_.h * in_shape_.w);
     add_bias(input, beta_,
-          in_shape_.c_, in_shape_.h_ * in_shape_.w_);
+          in_shape_.c, in_shape_.h * in_shape_.w);
     ouputs_ptr = net.current_tensor;
     print_info();
 }
@@ -19,16 +19,16 @@ void BatchNormLayer::forward(Network &net)
 int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
 {
     if (!weights_file.read(reinterpret_cast<char*>(beta_.data()),
-                           out_shape_.c_ * sizeof(float)))
+                           out_shape_.c * sizeof(float)))
         return 1;
     if (!weights_file.read(reinterpret_cast<char*>(gamma_.data()),
-                           out_shape_.c_ * sizeof(float)))
+                           out_shape_.c * sizeof(float)))
         return 1;
     if (!weights_file.read(reinterpret_cast<char*>( rolling_mean_.data()),
-                           out_shape_.c_ * sizeof(float)))
+                           out_shape_.c * sizeof(float)))
         return 1;
     if (!weights_file.read(reinterpret_cast<char*>( rolling_variance_.data()),
-                           out_shape_.c_ * sizeof(float)))
+                           out_shape_.c * sizeof(float)))
         return 1;
     return 0;
 }
@@ -37,10 +37,10 @@ int BatchNormLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_ = shape;
-    rolling_mean_.reserve(shape.c_);
-    rolling_variance_.reserve(shape.c_);
-    gamma_.reserve(shape.c_);
-    beta_.reserve(shape.c_);
+    rolling_mean_.reserve(shape.c);
+    rolling_variance_.reserve(shape.c);
+    gamma_.reserve(shape.c);
+    beta_.reserve(shape.c);
     return 0;
 }
 

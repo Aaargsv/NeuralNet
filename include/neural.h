@@ -1,14 +1,15 @@
 #ifndef NEURAL_H
 #define NEURAL_H
 #include <iostream>
+#include <vector>
 
 class Shape {
 public:
-    int h_;
-    int w_;
-    int c_;
+    int h;
+    int w;
+    int c;
 
-    Shape(): h_(0), w_(0), c_(0) {}
+    Shape(): h(0), w(0), c(0) {}
     Shape(int h, int w, int c)
     {
         reshape(h, w, c);
@@ -16,33 +17,33 @@ public:
 
     void reshape(int h, int w, int c)
     {
-        h_ = h;
-        w_ = w;
-        c_ = c;
+        this->h = h;
+        this->w = w;
+        this->c = c;
     }
 
     int get_size()
     {
-        return h_ * w_ * c_;
+        return h * w * c;
     }
 
 };
 
 std::ostream& operator<<(std::ostream& os, const Shape &shape)
 {
-    os << "(" << shape.h_ << ", " << shape.w_ << ", " << shape.c_ << ")";
+    os << "(" << shape.h << ", " << shape.w << ", " << shape.c << ")";
     return os;
 }
 
 bool is_HxW_equal(const Shape &shape1, const Shape &shape2)
 {
-    return ((shape1.h_ == shape2.h_) && (shape1.w_ == shape2.w_));
+    return ((shape1.h == shape2.h) && (shape1.w == shape2.w));
 }
 
 bool is_tensor_sizes_equal(const Shape &shape1, const Shape &shape2)
 {
-    return ((shape1.h_ == shape2.h_) && (shape1.w_ == shape2.w_) &&
-            (shape1.c_ == shape2.c_));
+    return ((shape1.h == shape2.h) && (shape1.w == shape2.w) &&
+            (shape1.c == shape2.c));
 }
 
 enum class LayerType {
@@ -54,7 +55,8 @@ enum class LayerType {
     BATCH_NORM,
     BIAS,
     LEAKY_ReLU,
-    LOGISTIC
+    LOGISTIC,
+    YOLO
 };
 
 class LayerParameters {
@@ -66,6 +68,16 @@ public:
                     can_pretrained_be_loaded_(can_pretrained_be_loaded) {}
 
 };
+
+struct BoundingBox  {
+    float bx;
+    float by;
+    float bh;
+    float bw;
+    float probability;
+};
+
+typedef std::vector<std::vector<BoundingBox>> BoundingBoxes;
 
 
 #endif //NEURAL_H

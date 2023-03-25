@@ -1,9 +1,10 @@
 #include "layers/logistic_layer.h"
+#include "operations/activation_functions.h"
 #include <cmath>
 
 float LogisticLayer::activation(float x) const
 {
-    return 1 / (1 + std::exp(-x));
+    return logistic(x);
 }
 
 void LogisticLayer::print_info() const

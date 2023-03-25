@@ -8,7 +8,7 @@
 
 class Network {
 public:
-    Network(int width, int height, int channels): image_shape(width, height, channels) {}
+    Network(int width, int height, int channels): image_shape_(width, height, channels) {}
     ~Network();
     inline void add_layer(Layer *layer) {
         layers_.push_back(layer);
@@ -19,11 +19,12 @@ public:
     friend Network& operator<<(Network &net, const Layer &layer);
 protected:
     /// Input image shape
-    Shape image_shape;
+    Shape net_shape_;
     /// Network layers
     std::vector<Layer*> layers_;
     std::vector<float> utility_memory;
     std::vector<float> *current_tensor;
+
 
     friend class Layer;
     friend class ActivationLayer;
@@ -35,5 +36,6 @@ protected:
     friend class UpsampleLayer;
     friend class ConcatenationLayer;
     friend class ShortcutLayer;
+    friend class YoloLayer;
 };
 #endif //NETWORK_H

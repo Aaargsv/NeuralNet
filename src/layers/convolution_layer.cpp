@@ -7,9 +7,9 @@
 void ConvolutionLayer::forward(Network &net)
 {
     std::vector<float> &input = *net.current_tensor;
-    convolution(input, in_shape_.c_, in_shape_.h_, in_shape_.w_,
-                kernel_size_, stride_, padding_, weights_, out_shape_.c_,
-                net.utility_memory, out_shape_.h_, out_shape_.w_, outputs_);
+    convolution(input, in_shape_.c, in_shape_.h, in_shape_.w,
+                kernel_size_, stride_, padding_, weights_, out_shape_.c,
+                net.utility_memory, out_shape_.h, out_shape_.w, outputs_);
     net.current_tensor = &outputs_;
     inter_layer->forward(net);
     print_info();
@@ -65,12 +65,12 @@ void ConvolutionLayer::print_info() const
 
 int ConvolutionLayer::compute_out_height() const
 {
-    return (in_shape_.h_ + 2 * padding_ - kernel_size_) / stride_ + 1;
+    return (in_shape_.h + 2 * padding_ - kernel_size_) / stride_ + 1;
 }
 
 int ConvolutionLayer::compute_out_width() const
 {
-    return (in_shape_.w_ + 2 * padding_ - kernel_size_) / stride_ + 1;
+    return (in_shape_.w + 2 * padding_ - kernel_size_) / stride_ + 1;
 }
 
 ConvolutionLayer *ConvolutionLayer::clone() const
