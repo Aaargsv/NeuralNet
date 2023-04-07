@@ -8,12 +8,21 @@
 void YoloLayer::forward(Network &net)
 {
     outputs_ = *net.current_tensor;
+
+    /**
+     * @brief apply sigmoid-function
+     * to components of YOLO-vector:
+     * tx, ty, pc, c1, c2, ..., cn
+     * for every anchors for every cell
+     */
+
     for (int n = 0; n < number_of_anchor_boxes_; n++) {
-        int pos = get_element_pos(n, 0, 0);
+
+        int pos = get_element_pos(n, 0, 0, 0);
         for (int i = 0; i < 2 * in_shape_.h * in_shape_.w; i++) {
             outputs_[pos + i] = logistic(outputs_[pos + i]);
         }
-        pos = get_element_pos(n, 4, 0);
+        pos = get_element_pos(n, 4, 0, 0);
         for (int i = 0; i < (classes_ + 1) * in_shape_.h * in_shape_.w; i++) {
             outputs_[pos + i] = logistic(outputs_[pos + i]);
         }
@@ -28,12 +37,28 @@ int YoloLayer::setup(const Shape &shape, const Network &net)
     return 0;
 }
 
+/**
+ * Return position of a specific YOLO-vector
+ * component inside a specific cell inside a specific anchor.
+ *
+ * @param number_of_anchor
+ * @param component_index
+ * @param cell_h Cell vertical coordinate
+ * @param cell_w Cell horizontal coordinate
+ * @return position of component inside YOLO-tensor
+ */
+
 int YoloLayer::get_element_pos(int number_of_anchor, int component_index, int cell_h, int cell_w) const
 {
     return number_of_anchor * in_shape_.h * in_shape_.w * (4 + classes_ + 1)
         + component_index * in_shape_.h * in_shape_.w + cell_h * in_shape_.w + cell_w;
 }
 
+/**
+ * Return number of detection
+ * where pc > threshold
+ * @return number of detection
+ */
 int YoloLayer::get_number_detection() const
 {
     int count = 0;
@@ -50,6 +75,16 @@ int YoloLayer::get_number_detection() const
     return count;
 }
 
+/**
+ * transform all coordinates according YOLO paper
+ * filter bounding boxes by criterion
+ * (pc > threshold) & (pc * class_i > threshold)
+ * also distribute satisfying bb by class
+ *
+ * @param bounding_boxes
+ * @param net_height
+ * @param net_width
+ */
 void YoloLayer::get_bounding_boxes(BoundingBoxes &bounding_boxes, int net_height, int net_width) const
 {
     for (int n = 0; n < number_of_anchor_boxes_; n++) {
@@ -102,6 +137,4 @@ int YoloLayer::load_pretrained(std::ifstream &weights_file)
 {
     return 0;
 };
-
-
 

@@ -62,7 +62,7 @@ void Network::gather_bounding_boxes()
 
 void Network::nms()
 {
-    
+
 }
 
 Network& operator<<(Network &net, const Layer &layer)

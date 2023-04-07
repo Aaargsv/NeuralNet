@@ -77,6 +77,7 @@ struct BoundingBox  {
     float probability;
 };
 
+/// detected bb for every class separately from each other
 typedef std::vector<std::vector<BoundingBox>> BoundingBoxes;
 
 
