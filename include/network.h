@@ -17,7 +17,7 @@ public:
     int setup();
     int load_pretrained(const std::string &filename);
     void gather_bounding_boxes();
-    void nms();
+    void apply_nms(float iou_threshold);
     friend Network& operator<<(Network &net, const Layer &layer);
 protected:
     /// Input image shape

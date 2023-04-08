@@ -60,9 +60,26 @@ void Network::gather_bounding_boxes()
     }
 }
 
-void Network::nms()
+void Network::apply_nms(float iou_threshold)
 {
-
+    for (int i = 0; i < bounding_boxes_.size(); i++) {
+        std::sort(bounding_boxes_[i].begin(),
+                  bounding_boxes_[i].end(),
+                  [] (const BoundingBox& a, const BoundingBox& b) {
+                    return a.probability > b.probability;
+        });
+        for (int j = 0; j < bounding_boxes_[i].size(); j++) {
+            if (bounding_boxes_[i][j].probability == 0 )
+                continue;
+            for (int k = j + 1; k < bounding_boxes_[i].size(); k++) {
+                if (bounding_boxes_[i][k].probability == 0 )
+                    continue;
+                if (compute_IoU(bounding_boxes_[i][j], bounding_boxes_[i][k]) > iou_threshold) {
+                    bounding_boxes_[i][k].probability = 0;
+                }
+            }
+        }
+    }
 }
 
 Network& operator<<(Network &net, const Layer &layer)
