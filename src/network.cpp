@@ -3,6 +3,11 @@
 #include <fstream>
 #include <algorithm>
 
+Network::Network(const std::string &image_file_name, const std::string &weight_file_name, int &error_status):
+    image_file_name_(image_file_name), weights_file_name_(weight_file_name)
+{
+
+}
 
 Network::~Network()
 {
@@ -34,6 +39,29 @@ int Network::setup()
     }
     utility_memory.reserve(utility_memory_size);
 }
+
+int Network::load_image(const std::string &filename)
+{
+    int width, height, channels;
+    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
+    if (!data) {
+        std::cout << "[Error]: can't load image" << std::endl;
+        return 1;
+    }
+
+    net_shape_.reshape(height, width, channels);
+    for (int c = 0; c < net_shape_.c; c++) {
+        for (int h = 0; h < net_shape_.h; h++) {
+            for (int w = 0; w < net_shape_.w; w++) {
+                int index = c * net_shape_.w * net_shape_.h + h * net_shape_.w + w;
+                input_image_tensor[index] = static_cast<float>(data[index]) / 255.0f;
+            }
+        }
+    }
+    return 0;
+}
+
+
 
 int Network::load_pretrained(const std::string &filename)
 {

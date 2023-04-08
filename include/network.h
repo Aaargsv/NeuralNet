@@ -3,25 +3,34 @@
 
 #include "neural.h"
 #include "layers/layer.h"
+#include "stb_image.h"
+#include "stb_image_write.h"
 #include <vector>
 #include <string>
 
 class Network {
 public:
-    Network(int width, int height, int channels): net_shape_(width, height, channels) {}
+    Network(const std::string &image_file_name, const std::string &weight_file_name, int &error_status);
     ~Network();
+
     inline void add_layer(Layer *layer) {
         layers_.push_back(layer);
     }
     std::vector<float>* forward(std::vector<float> *input_image);
     int setup();
+    int load_image(const std::string &filename);
     int load_pretrained(const std::string &filename);
     void gather_bounding_boxes();
     void apply_nms(float iou_threshold);
     friend Network& operator<<(Network &net, const Layer &layer);
 protected:
+    std::string image_file_name_;
+    std::string weights_file_name_;
+
     /// Input image shape
     Shape net_shape_;
+    std::vector<float> input_image_tensor;
+
     /// Network layers
     std::vector<Layer*> layers_;
     std::vector<float> utility_memory;
