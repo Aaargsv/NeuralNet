@@ -10,15 +10,21 @@
 
 class Network {
 public:
-    Network(const std::string &image_file_name, const std::string &weight_file_name, int &error_status);
+    Network(int height, int width,
+            const std::string &image_file_name,
+            const std::string &weight_file_name,
+            int &error_status);
     ~Network();
 
     inline void add_layer(Layer *layer) {
         layers_.push_back(layer);
     }
+    int infer();
     std::vector<float>* forward(std::vector<float> *input_image);
     int setup();
     int load_image(const std::string &filename);
+    void bilinear_interpolation(std::vector<float> &src, int src_height, int src_width,
+            std::vector<float> &dst, int dst_height, int dst_width, int channels);
     int load_pretrained(const std::string &filename);
     void gather_bounding_boxes();
     void apply_nms(float iou_threshold);
@@ -27,9 +33,12 @@ protected:
     std::string image_file_name_;
     std::string weights_file_name_;
 
-    /// Input image shape
+    /// Resized image shape
     Shape net_shape_;
+    /// Input imahe shape
+    Shape input_image_shape_;
     std::vector<float> input_image_tensor;
+    std::vector<float> resized_image_tensor;
 
     /// Network layers
     std::vector<Layer*> layers_;
