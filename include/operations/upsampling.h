@@ -2,8 +2,8 @@
 #define UPSAMPLING_H
 #include <vector>
 
-template <typename T>
-void upsample(std::vector<T> &src, int channels, int height, int width, int stride, std::vector<T> &dst);
+
+void upsample(std::vector<float> &src, int channels, int height, int width, int stride, std::vector<float> &dst);
 
 
 #endif //UPSAMPLING_H

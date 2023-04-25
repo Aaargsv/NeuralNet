@@ -2,8 +2,8 @@
 #include <vector>
 #include <cmath>
 
-template <typename T>
-void add_bias(std::vector<T> &tensor, const std::vector<T> &bias, int channels, int size)
+
+void add_bias(std::vector<float> &tensor, const std::vector<float> &bias, int channels, int size)
 {
     for (int c = 0; c < channels; c++) {
         for (int i = 0; i < size; i++) {
@@ -12,8 +12,8 @@ void add_bias(std::vector<T> &tensor, const std::vector<T> &bias, int channels, 
     }
 }
 
-template <typename T>
-void scale(std::vector<T> &tensor, const std::vector<T> &scales, int channels, int size)
+
+void scale(std::vector<float> &tensor, const std::vector<float> &scales, int channels, int size)
 {
     for (int c = 0; c < channels; c++) {
         for (int i = 0; i < size; i++) {

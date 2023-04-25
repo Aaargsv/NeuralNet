@@ -3,8 +3,7 @@
 
 #include "neural.h"
 #include "layers/layer.h"
-#include "stb_image.h"
-#include "stb_image_write.h"
+#include "bounding_box.h"
 #include <vector>
 #include <string>
 
@@ -28,6 +27,11 @@ public:
     int load_pretrained(const std::string &filename);
     void gather_bounding_boxes();
     void apply_nms(float iou_threshold);
+    void draw_box(int x1, int y1, int x2, int y2, float r, float g, float b);
+    void trace_box_outline(int x1, int y1, int x2, int y2, int w, float r, float g, float b);
+    void draw_bounding_boxes(float threshold);
+    int save_image(const std::string &file_name);
+
     friend Network& operator<<(Network &net, const Layer &layer);
 protected:
     std::string image_file_name_;

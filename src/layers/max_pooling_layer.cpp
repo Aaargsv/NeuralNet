@@ -14,7 +14,10 @@ void MaxPollingLayer::forward(Network &net) {
 
 int MaxPollingLayer::setup(const Shape &shape, const Network &net) {
     in_shape_ = shape;
-    out_shape_.reshape(compute_out_height(), compute_out_width(), shape.c_);
+    out_shape_.reshape(compute_out_height(), compute_out_width(), shape.c);
+    std::cout << "[MaxPolling] " << "(" << window_size_ << ", " << padding_ << ", " << stride_ << ") :"
+                << out_shape_.h << std::endl;
+
     outputs_.reserve(out_shape_.get_size());
     return 0;
 }
@@ -40,11 +43,11 @@ MaxPollingLayer *MaxPollingLayer::clone() const
 }
 int MaxPollingLayer::compute_out_width() const
 {
-    return (in_shape_.w + 2 * padding_ - window_size_) / stride_ + 1;
+    return (in_shape_.w + padding_ - window_size_) / stride_ + 1;
 }
 int MaxPollingLayer::compute_out_height() const
 {
-    return (in_shape_.h + 2 * padding_ - window_size_) / stride_ + 1;
+    return (in_shape_.h + padding_ - window_size_) / stride_ + 1;
 }
 
 int MaxPollingLayer::load_pretrained(std::ifstream &weights_file)

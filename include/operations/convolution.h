@@ -2,9 +2,10 @@
 #define CONVOLUTION_H
 
 #include <vector>
-template <typename T>
-void convolution(std::vector<T> src, int channels, int src_height, int src_width, int kernel,
-                 int stride, int pad, std::vector<T> weights , int number_filters,
-                 std::vector<T> utility_memory, int dst_height, int dst_width, std::vector<T> dst);
+
+
+void convolution(std::vector<float> src, int channels, int src_height, int src_width, int kernel,
+                 int stride, int pad, std::vector<float> weights , int number_filters,
+                 std::vector<float> utility_memory, int dst_height, int dst_width, std::vector<float> dst);
 
 #endif //CONVOLUTION_H

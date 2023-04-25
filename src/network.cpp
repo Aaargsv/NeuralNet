@@ -1,3 +1,8 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #include "network.h"
 #include "layers/yolo_layer.h"
 #include <fstream>
@@ -40,7 +45,7 @@ int Network::infer()
 
     std::vector<float> *output_tensor = forward(&resized_image_tensor);
     gather_bounding_boxes();
-
+    return 0;
 }
 
 std::vector<float>* Network::forward(std::vector<float>* input_image)
@@ -59,6 +64,7 @@ int Network::setup()
     int temp;
     for (int i = 0; i < layers_.size(); i++) {
         if ((temp = layers_[i]->setup(input_layer_shape, *this)) < 0) {
+            std::cout << "[Error]: can't setup layer #" << i << std::endl;
             return 1;
         }
         utility_memory_size = std::max(temp, utility_memory_size);
@@ -166,9 +172,9 @@ void Network::bilinear_interpolation(std::vector<float> &src, int src_height, in
 
 int Network::load_pretrained(const std::string &filename)
 {
-    std::ifstream file_weights(filename);
+    std::ifstream file_weights(filename, std::ios::binary);
     if (!file_weights) {
-        std::cout << "[Error]: can't load pretrained weights" << std::endl;
+        std::cout << "[Error]: can't open pretrained weights file: " << filename << std::endl;
         return 1;
     }
     for (int i = 0; i < layers_.size(); i++) {
@@ -176,6 +182,7 @@ int Network::load_pretrained(const std::string &filename)
             return 1;
         }
     }
+    std::cout << "pretrained weights are loaded" << std::endl;
     return 0;
 }
 
@@ -212,10 +219,106 @@ void Network::apply_nms(float iou_threshold)
     }
 }
 
+void Network::draw_box(int x1, int y1, int x2, int y2, float r, float g, float b)
+{
+    int w = input_image_shape_.w;
+    int h = input_image_shape_.h;
+
+    if(x1 < 0) x1 = 0;
+    if(x1 >= w) x1 = w - 1;
+    if(x2 < 0) x2 = 0;
+    if(x2 >= w) x2 = w - 1;
+
+    if(y1 < 0) y1 = 0;
+    if(y1 >= h) y1 = h - 1;
+    if(y2 < 0) y2 = 0;
+    if(y2 >= h) y2 = h - 1;
+
+    for(int i = x1; i <= x2; ++i){
+        input_image_tensor[i + y1*w + 0*w*h] = r;
+        input_image_tensor[i + y2*w + 0*w*h] = r;
+
+        input_image_tensor[i + y1*w + 1*w*h] = g;
+        input_image_tensor[i + y2*w + 1*w*h] = g;
+
+        input_image_tensor[i + y1*w + 2*w*h] = b;
+        input_image_tensor[i + y2*w + 2*w*h] = b;
+    }
+    for(int i = y1; i <= y2; ++i){
+        input_image_tensor[x1 + i*w + 0*w*h] = r;
+        input_image_tensor[x2 + i*w + 0*w*h] = r;
+
+        input_image_tensor[x1 + i*w + 1*w*h] = g;
+        input_image_tensor[x2 + i*w + 1*w*h] = g;
+
+        input_image_tensor[x1 + i*w + 2*w*h] = b;
+        input_image_tensor[x2 + i*w + 2*w*h] = b;
+    }
+}
+
+void Network::trace_box_outline(int x1, int y1, int x2, int y2, int w, float r, float g, float b)
+{
+    for(int i = 0; i < w; ++i){
+        draw_box(x1+i, y1+i, x2-i, y2-i, r, g, b);
+    }
+}
+
+void Network::draw_bounding_boxes(float threshold)
+{
+    for (int i = 0; i < bounding_boxes_.size(); i++) {
+        for (int j = 0; j < bounding_boxes_[i].size(); ++j) {
+            const BoundingBox &bb = bounding_boxes_[i][j];
+            if (bb.probability > threshold) {
+                int thickness = input_image_shape_.h * .006;
+
+                float red = 1;
+                float green = 0;
+                float blue = 0;
+
+                int left  = (bb.bx - bb.bw / 2.) * input_image_shape_.w;
+                int right = (bb.bx + bb.bw / 2.) * input_image_shape_.w;
+                int top   = (bb.by - bb.bh / 2.) * input_image_shape_.h;
+                int bot   = (bb.by + bb.bh / 2.) * input_image_shape_.h;
+
+                if(left < 0) left = 0;
+                if(right > input_image_shape_.w - 1) right = input_image_shape_.w-1;
+                if(top < 0) top = 0;
+                if(bot > input_image_shape_.h-1) bot = input_image_shape_.h-1;
+
+                trace_box_outline(left, top, right, bot, thickness, red, green, blue);
+            }
+        }
+    }
+};
+
+int Network::save_image(const std::string &file_name)
+{
+
+    unsigned char *saved_image = new unsigned char[input_image_shape_.h *
+                                                   input_image_shape_.w *
+                                                   input_image_shape_.c];
+    for (int c = 0; c < input_image_shape_.c; c++) {
+        for (int h = 0; h < input_image_shape_.h; h++) {
+            for (int w = 0; w < input_image_shape_.w; w++) {
+                int dst_index =  h * input_image_shape_.w * input_image_shape_.c  +
+                        w * input_image_shape_.c + c;
+                int src_index = c * input_image_shape_.h * input_image_shape_.w +
+                        h * input_image_shape_.w + w;
+                saved_image[dst_index] = static_cast<unsigned char>(255 * input_image_tensor[src_index]);
+            }
+        }
+    }
+    std::string  temp_str = file_name + ".png";
+
+    if (stbi_write_png(temp_str.c_str(), input_image_shape_.w ,input_image_shape_.h ,
+                       input_image_shape_.c, saved_image, 0))
+        return 1;
+    return 0;
+}
+
+
 Network& operator<<(Network &net, const Layer &layer)
 {
     net.add_layer(layer.clone());
     return net;
 }
-
-

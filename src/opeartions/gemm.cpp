@@ -1,16 +1,16 @@
 #include "operations/gemm.h"
 
-template <typename T>
-void gemm(int M, int N, int K, T *A, int lda, T *B, int ldb, T *C, int ldc)
+
+void gemm(int M, int N, int K, float *A, int lda, float *B, int ldb, float *C, int ldc)
 {
     for (int i = 0; i < M; i++) {
-        T *c = C + i * ldc;
+        float *c = C + i * ldc;
         for (int j = 0; j < N; j++) {
             c[j] = 0;
         }
         for (int k = 0; k < K; k++ ) {
-            T ax = A[i * lda + k];
-            const T *b = B + k * ldb;
+            float ax = A[i * lda + k];
+            const float *b = B + k * ldb;
             for (int j = 0; j < N; j++) {
                 c[j] += ax * b[j];
             }

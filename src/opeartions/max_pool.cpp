@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <limits>
 
-template <typename T>
-void max_pool(const std::vector<T> &src, int channels, int src_height, int src_width,
-              int kernel, int stride, int pad, std::vector<T> &dst)
+
+void max_pool(const std::vector<float> &src, int channels, int src_height, int src_width,
+              int kernel, int stride, int pad, std::vector<float> &dst)
 {
     int dst_height = (src_height - kernel + 2 * pad) / stride + 1;
     int dst_width = (src_width - kernel + 2 * pad) / stride + 1;
@@ -18,7 +18,7 @@ void max_pool(const std::vector<T> &src, int channels, int src_height, int src_w
                 int left = w * stride - pad;
                 int right = std::min(left + kernel, src_width);
                 left = std::max(left, 0);
-                T max_value = std::numeric_limits<T>::lowest();
+                float max_value = std::numeric_limits<float>::lowest();
                 for(int k_h = top; k_h < bottom; k_h++) {
                     for (int k_w = left; k_w < right; k_w++) {
                         int src_index = (c * src_height + k_h)  * src_width + k_w;

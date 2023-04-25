@@ -19,7 +19,7 @@ int BiasLayer::setup(const Shape &shape, const Network &net)
 
 int BiasLayer::load_pretrained(std::ifstream &weights_file)
 {
-    if(!weights_file.read(reinterpret_cast<char*>(bias_.data()), out_shape_.c_ * sizeof(float)))
+    if(!weights_file.read(reinterpret_cast<char*>(bias_.data()), out_shape_.c * sizeof(float)))
         return 1;
     return 0;
 }

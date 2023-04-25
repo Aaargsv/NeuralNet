@@ -1,7 +1,7 @@
 #include "operations/upsampling.h"
 
-template <typename T>
-void upsample(std::vector<T> &src, int channels, int height, int width, int stride, std::vector<T> &dst)
+
+void upsample(std::vector<float> &src, int channels, int height, int width, int stride, std::vector<float> &dst)
 {
     int dst_height = height * stride;
     int dst_width = width * stride;

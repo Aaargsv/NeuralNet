@@ -2,6 +2,7 @@
 #define YOLO_LAYER_H
 
 #include "layers/layer.h"
+#include "bounding_box.h"
 #include <vector>
 
 class YoloLayer: public Layer {

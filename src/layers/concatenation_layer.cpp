@@ -19,12 +19,16 @@ int ConcatenationLayer::setup(const Shape &shape, const Network &net)
     for (int i = 1; i < indexes_.size(); i++) {
         Shape tmp_shape = layers[indexes_[i]]->out_shape();
         if(!is_HxW_equal(out_shape, tmp_shape)) {
+            std::cout << "[Error]: can't concatenate" << std::endl;
+            std::cout << "HxW isn't equal: " << "(" << out_shape.h << ", " <<  out_shape.w << ") "
+                      << "and " <<  "(" << tmp_shape.h << ", " <<  tmp_shape.w << ")" << std::endl;
             return -1;
         }
         out_shape.c += tmp_shape.c;
     }
 
     out_shape_ = out_shape;
+
     outputs_.reserve(out_shape_.get_size());
     return 0;
 }

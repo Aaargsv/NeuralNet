@@ -5,7 +5,9 @@
 
 class ConcatenationLayer: public Layer {
 public:
-    ConcatenationLayer(std::vector<int> &indexes): indexes_(indexes),
+
+    /// layer indexes start from zero
+    ConcatenationLayer(std::vector<int> indexes): indexes_(indexes),
             Layer(LayerParameters(LayerType::CONCATENATION,false)) {}
     ~ConcatenationLayer() override {}
 

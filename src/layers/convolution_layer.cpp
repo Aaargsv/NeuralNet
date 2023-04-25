@@ -2,14 +2,17 @@
 #include "operations/convolution.h"
 #include "utils/utils.h"
 #include "network.h"
+#include "bounding_box.h"
 #include <iostream>
 
 void ConvolutionLayer::forward(Network &net)
 {
     std::vector<float> &input = *net.current_tensor;
+
     convolution(input, in_shape_.c, in_shape_.h, in_shape_.w,
                 kernel_size_, stride_, padding_, weights_, out_shape_.c,
                 net.utility_memory, out_shape_.h, out_shape_.w, outputs_);
+
     net.current_tensor = &outputs_;
     inter_layer->forward(net);
     print_info();
@@ -21,6 +24,12 @@ int ConvolutionLayer::setup(const Shape &shape, const Network &net)
     in_shape_ = shape;
     weights_length_ = kernel_size_ * kernel_size_ * filters_;
     out_shape_.reshape(compute_out_height(), compute_out_width(), filters_);
+
+
+    std::cout << "[Convolution] " << "(" << filters_ << ", "
+                                  << kernel_size_ << ", " << padding_ << ", " << stride_  << ") :"
+                                  << out_shape_.h << std::endl;
+
     weights_.reserve(weights_length_);
     outputs_.reserve(out_shape_.get_size());
     if (has_batch_norm_)
@@ -28,8 +37,8 @@ int ConvolutionLayer::setup(const Shape &shape, const Network &net)
     else
         inter_layer = new BiasLayer();
     inter_layer->setup(out_shape_, net);
-    int utility_memory_size = out_shape_.h_ * out_shape_.w_ * kernel_size_ *
-            kernel_size_ * out_shape_.c_;
+    int utility_memory_size = out_shape_.h * out_shape_.w * kernel_size_ *
+            kernel_size_ * out_shape_.c;
     return utility_memory_size;
 }
 
