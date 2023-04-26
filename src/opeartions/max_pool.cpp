@@ -7,8 +7,15 @@
 void max_pool(const std::vector<float> &src, int channels, int src_height, int src_width,
               int kernel, int stride, int pad, std::vector<float> &dst)
 {
-    int dst_height = (src_height - kernel + 2 * pad) / stride + 1;
-    int dst_width = (src_width - kernel + 2 * pad) / stride + 1;
+    /**
+     * @brief
+     * idk ...+ 2 * pad... or ...+ pad... in dst_height
+     * and in dst_width
+     * in darknet ...+ pad...
+     */
+
+    int dst_height = (src_height - kernel + pad) / stride + 1;
+    int dst_width = (src_width - kernel + pad) / stride + 1;
     for (int c = 0; c < channels; c++) {
         for (int h = 0; h < dst_height; h++) {
             int top = h * stride - pad;

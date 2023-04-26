@@ -22,7 +22,8 @@ void ConvolutionLayer::forward(Network &net)
 int ConvolutionLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
-    weights_length_ = kernel_size_ * kernel_size_ * filters_;
+    /// channels * k * k * filters
+    weights_length_ = in_shape_.c * kernel_size_ * kernel_size_ * filters_;
     out_shape_.reshape(compute_out_height(), compute_out_width(), filters_);
 
 

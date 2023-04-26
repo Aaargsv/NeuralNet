@@ -1,5 +1,6 @@
 #include "operations/im2col.h"
 #include <vector>
+#include <iostream>
 
 
 float get_im_value(const std::vector<float> &data, int row, int col, int channel, int width, int height)
@@ -15,6 +16,7 @@ float get_im_value(const std::vector<float> &data, int row, int col, int channel
 void im2col(const std::vector<float> &source, int width, int height, int channels,
             int kernel, int pad, int stride, std::vector<float> &col)
 {
+    std::cout << "col_matrix capacity = " << col.capacity() << std::endl;
     int width_col = (width + 2 * pad - kernel) / stride + 1;
     int height_col =  (height + 2 * pad - kernel) / stride + 1;
     int channels_col = channels * kernel * kernel;

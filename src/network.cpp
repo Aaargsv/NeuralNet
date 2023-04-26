@@ -71,6 +71,7 @@ int Network::setup()
         input_layer_shape = layers_[i]->out_shape();
     }
     utility_memory.reserve(utility_memory_size);
+    std::cout << "utility_memory capacity = " << utility_memory.capacity() << std::endl;
     return 0;
 }
 
@@ -177,6 +178,11 @@ int Network::load_pretrained(const std::string &filename)
         std::cout << "[Error]: can't open pretrained weights file: " << filename << std::endl;
         return 1;
     }
+
+    /// header consists of major(4 byte) + minor(4 byte) + revision(4 byte) + seen(8 byte): sum is 20 byte
+    /// skip header
+    file_weights.seekg(20);
+
     for (int i = 0; i < layers_.size(); i++) {
         if (layers_[i]->load_pretrained(file_weights)) {
             return 1;
