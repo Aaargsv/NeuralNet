@@ -17,6 +17,7 @@ public:
                      kernel_size_(kernel_size), filters_(filters), inter_layer(nullptr),
                      padding_(padding), stride_(stride), has_batch_norm_(has_batch_norm),
                      Layer(LayerParameters(LayerType::CONVOLUTION,true)) {}
+
     ~ConvolutionLayer() override {
        delete inter_layer;
     }

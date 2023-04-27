@@ -1,0 +1,6 @@
+#ifndef BIAS_LAYER_GPU_H
+#define BIAS_LAYER_GPU_H
+
+
+
+#endif //CNN_BIAS_LAYER_GPU_H

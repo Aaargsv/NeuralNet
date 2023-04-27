@@ -5,6 +5,7 @@
 
 #include "network.h"
 #include "layers/yolo_layer.h"
+#include "gpu.cuh"
 #include <fstream>
 #include <algorithm>
 
@@ -60,7 +61,6 @@ std::vector<float>* Network::forward(std::vector<float>* input_image)
 int Network::setup()
 {
     Shape input_layer_shape = net_shape_;
-    int utility_memory_size = 0;
     int temp;
     for (int i = 0; i < layers_.size(); i++) {
         if ((temp = layers_[i]->setup(input_layer_shape, *this)) < 0) {
@@ -70,7 +70,13 @@ int Network::setup()
         utility_memory_size = std::max(temp, utility_memory_size);
         input_layer_shape = layers_[i]->out_shape();
     }
+
+#ifdef GPU
+    gpu_malloc(dev_utility_memory, utility_memory_size);
+#else
     utility_memory.reserve(utility_memory_size);
+#endif
+
     std::cout << "utility_memory capacity = " << utility_memory.capacity() << std::endl;
     return 0;
 }
@@ -86,11 +92,11 @@ int Network::load_image(const std::string &filename)
 
     input_image_tensor.reserve(channels * height * width);
     input_image_shape_.reshape(height, width, channels);
-    for (int c = 0; c < net_shape_.c; c++) {
-        for (int h = 0; h < net_shape_.h; h++) {
-            for (int w = 0; w < net_shape_.w; w++) {
-                int dsr_index = c * net_shape_.w * net_shape_.h + h * net_shape_.w + w;
-                int src_index = h * net_shape_.w * net_shape_.c + w * net_shape_.c + c;
+    for (int c = 0; c < input_image_shape_.c; c++) {
+        for (int h = 0; h < input_image_shape_.h; h++) {
+            for (int w = 0; w < input_image_shape_.w; w++) {
+                int dsr_index = c * input_image_shape_.w * input_image_shape_.h + h * input_image_shape_.w + w;
+                int src_index = h * input_image_shape_.w * input_image_shape_.c + w * input_image_shape_.c + c;
                 input_image_tensor[dsr_index] = static_cast<float>(data[src_index]) / 255.0f;
             }
         }

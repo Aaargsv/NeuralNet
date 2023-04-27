@@ -1,0 +1,5 @@
+#ifndef BATCH_NORM_LAYER_GPU_H
+#define BATCH_NORM_LAYER_GPU_H
+
+
+#endif //BATCH_NORM_LAYER_GPU_H

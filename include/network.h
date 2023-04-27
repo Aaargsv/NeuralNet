@@ -46,10 +46,13 @@ protected:
 
     /// Network layers
     std::vector<Layer*> layers_;
-    std::vector<float> utility_memory;
     std::vector<float> *current_tensor;
-    BoundingBoxes bounding_boxes_;
 
+    std::vector<float> utility_memory;
+    float *dev_utility_memory;
+    int utility_memory_size;
+
+    BoundingBoxes bounding_boxes_;
     int num_classes_;
 
     friend class Layer;
@@ -63,5 +66,7 @@ protected:
     friend class ConcatenationLayer;
     friend class ShortcutLayer;
     friend class YoloLayer;
+
+    friend class ConvolutionLayerGPU;
 };
 #endif //NETWORK_H

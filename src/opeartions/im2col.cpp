@@ -1,4 +1,4 @@
-#include "operations/im2col.h"
+#include "operations/im2col_gpu.h"
 #include <vector>
 #include <iostream>
 

@@ -37,7 +37,7 @@ void BiasLayer::print_info() const
     std::cout << "------------------------\n";
 }
 
-inline BiasLayer *BiasLayer::clone() const
+BiasLayer *BiasLayer::clone() const
 {
     return new BiasLayer(*this);
 };
