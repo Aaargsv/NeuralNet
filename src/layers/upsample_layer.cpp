@@ -13,7 +13,7 @@ int UpsampleLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_.reshape(compute_out_height(), compute_out_width(), shape.c);
-    outputs_.reserve(out_shape_.get_size());
+    outputs_.resize(out_shape_.get_size());
     return 0;
 }
 

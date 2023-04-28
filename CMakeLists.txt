@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.17)
 project(CNN LANGUAGES CXX CUDA)
-set(CMAKE_CXX_STANDARD 14)
 
 find_package(CUDA)
-
 include_directories(include)
+SET(CMAKE_CUDA_STANDARD 14)
+
+include_directories(${CUDA_INCLUDE_DIRS})
+
 add_executable(CNN main.cpp include/layers/layer.h src/network.cpp include/network.h include/neural.h include/layers/activation_layer.h
         include/layers/leaky_relu_layer.h include/layers/convolution_layer.h src/layers/convolution_layer.cpp
         include/layers/max_pooling_layer.h src/layers/max_pooling_layer.cpp include/layers/batch_norm_layer.h
@@ -21,12 +23,28 @@ add_executable(CNN main.cpp include/layers/layer.h src/network.cpp include/netwo
         include/bounding_box.h src/bounding_box.cpp
         include/layers/gpu/convolution_layer_gpu.h src/layers/gpu/convolution_layer_gpu.cpp
         include/layers/gpu/bias_layer_gpu.h src/layers/gpu/bias_layer_gpu.cpp
-        include/layers/gpu/batch_norm_layer_gpu.h src/layers/gpu/batch_norm_layer_gpu.cpp)
+        include/layers/gpu/batch_norm_layer_gpu.h src/layers/gpu/batch_norm_layer_gpu.cpp
 
-target_compile_options(CNN PRIVATE)
+        src/gpu.cu
+        include/gpu.cuh
+        include/operations/im2col_gpu.cuh
+        include/operations/gemm_gpu.cuh
+        src/opeartions/gemm_gpu.cu
+        src/opeartions/im2col_gpu.cu)
+
+add_compile_definitions(GPU)
+
+set_target_properties(
+        CNN
+        PROPERTIES
+        CUDA_PROPAGATE_HOST_FLAGS ON
+        CUDA_SEPARABLE_COMPILATION ON)
+
+target_link_libraries(CNN cuda cudart cublas curand)
+
+#[===[
+
 target_link_libraries(CNN kernels)
-
-
 add_library(kernels
         src/gpu.cu
         include/gpu.cuh
@@ -35,10 +53,14 @@ add_library(kernels
         src/opeartions/gemm_gpu.cu
         src/opeartions/im2col_gpu.cu)
 
+
 target_link_libraries(kernels cuda cudart cublas curand)
 
 set_target_properties(
         kernels
         PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON)
+
+
+]===]
 

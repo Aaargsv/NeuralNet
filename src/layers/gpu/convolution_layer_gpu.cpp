@@ -12,16 +12,16 @@ void ConvolutionLayerGPU::forward(Network &net)
     std::vector<float> &input = *net.current_tensor;
 
     float *dev_input;
-    int error_status = gpu_malloc(dev_input, input.size());
+    int error_status = gpu_malloc(&dev_input, input.size() * sizeof(float));
     assert(error_status == 0);
-    error_status = copy_to_gpu(dev_input, &input[0], input.size());
+    error_status = copy_to_gpu(dev_input, &input[0], input.size() * sizeof(float));
     assert(error_status == 0);
 
     convolution_gpu(dev_input, in_shape_.c, in_shape_.h, in_shape_.w,
                 kernel_size_, stride_, padding_, dev_weights_, out_shape_.c,
                 net.dev_utility_memory, out_shape_.h, out_shape_.w, dev_outputs_);
 
-    error_status = extract_from_gpu(&outputs_[0], dev_outputs_, outputs_.size());
+    error_status = extract_from_gpu(&outputs_[0], dev_outputs_, outputs_.size() * sizeof(float));
     assert(error_status == 0);
 
     net.current_tensor = &outputs_;
@@ -42,15 +42,15 @@ int ConvolutionLayerGPU::setup(const Shape &shape, const Network &net)
               << kernel_size_ << ", " << padding_ << ", " << stride_  << ") :"
               << out_shape_.h << std::endl;
 
-    weights_.reserve(weights_length_);
-    outputs_.reserve(out_shape_.get_size());
+    weights_.resize(weights_length_);
+    outputs_.resize(out_shape_.get_size());
 
-    if (gpu_malloc(dev_weights_, weights_length_)) {
+    if (gpu_malloc(&dev_weights_, weights_length_ * sizeof (float))) {
         std::cout << "[Error]: can't setup weights of ConvolutionLayerGPU" << std::endl;
         return -1;
     }
 
-    if (gpu_malloc(dev_outputs_, weights_length_)) {
+    if (gpu_malloc(&dev_outputs_, out_shape_.get_size() * sizeof (float))) {
         std::cout << "[Error]: can't setup weights of ConvolutionLayerGPU" << std::endl;
         return -1;
     }
@@ -76,7 +76,7 @@ int ConvolutionLayerGPU::load_pretrained(std::ifstream &weights_file)
             weights_length_ * sizeof(float)))
         return 1;
 
-    if (copy_to_gpu(dev_weights_, &weights_[0], weights_.size())) {
+    if (copy_to_gpu(dev_weights_, &weights_[0], weights_.size() * sizeof(float))) {
         std::cout << "[Error]: can't copy weights of ConvolutionLayerGPU to GPU" << std::endl;
         return 1;
     }

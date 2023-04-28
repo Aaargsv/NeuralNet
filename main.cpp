@@ -12,21 +12,24 @@
 #include <vector>
 #include <string>
 
-#define GPU
+int main()
+{
+#ifdef GPU
+    std::cout << "GPU MODE" << std::endl;
+#endif
 
-int main() {
+    std::string  image_file = "P0294.png";
+    std::string  weight_file = "yolov3-tiny_obj_best.weights";
 
     display_header();
 
-
-    std::string  image_file = "airport.png";
-    std::string  weight_file = "yolov3-tiny_obj_best.weights";
     int error_status = 0;
-    Network model(416, 416, image_file, weight_file, error_status);
+    Network model(416, 416, image_file, weight_file, 1, error_status);
     if (error_status) {
         std::cout << "[Error]: cnn" << std::endl;
         return 1;
     }
+    float threshold = 0.0;
 
     model << /*0*/  ConvolutionLayerGPU(3, 16, 1, 1, true)
           << /*1*/  LeakyReluLayer()
@@ -55,7 +58,7 @@ int main() {
           << /*23*/ LeakyReluLayer()
           << /*24*/ ConvolutionLayerGPU(1, 18, 0, 1, false)
           << /*25*/ LinearLayer()
-          << /*26*/ YoloLayer(6, 1, 0.7, {10,14,  23,27,  37,58,  81,82,  135,169,  344,319})
+          << /*26*/ YoloLayer(3, 1, threshold, {81,82,  135,169,  344,319})
           << /*27*/ ConcatenationLayer({20})
           << /*28*/ ConvolutionLayerGPU(1, 128, 0, 1, true)
           << /*29*/ LeakyReluLayer()
@@ -65,15 +68,17 @@ int main() {
           << /*33*/ LeakyReluLayer()
           << /*34*/ ConvolutionLayerGPU(1, 18, 0, 1, false)
           << /*35*/ LinearLayer()
-          << /*36*/ YoloLayer(6, 1, 0.7, {10,14,  23,27,  37,58,  81,82,  135,169,  344,319});
+          << /*36*/ YoloLayer(3, 1, threshold, {23,27,  37,58,  81,82});
 
     if (model.infer()) {
         std::cout << "[Error]: can't infer" << std::endl;
         return 1;
     }
 
-    model.apply_nms(0.4);
-    model.draw_bounding_boxes(0.4);
+    model.save_detections("log_detections.txt");
+
+    //model.apply_nms(0.4);
+    model.draw_bounding_boxes(0.28);
     if (model.save_image("detection")) {
         std::cout << "[Error]: can't save file" << std::endl;
         return 1;

@@ -18,7 +18,7 @@ int MaxPollingLayer::setup(const Shape &shape, const Network &net) {
     std::cout << "[MaxPolling] " << "(" << window_size_ << ", " << padding_ << ", " << stride_ << ") :"
                 << out_shape_.h << std::endl;
 
-    outputs_.reserve(out_shape_.get_size());
+    outputs_.resize(out_shape_.get_size());
     return 0;
 }
 

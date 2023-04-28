@@ -13,7 +13,7 @@ int BiasLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_ = shape;
-    bias_.reserve(shape.c);
+    bias_.resize(shape.c);
     return 0;
 }
 

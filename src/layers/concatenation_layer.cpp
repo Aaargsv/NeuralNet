@@ -29,7 +29,7 @@ int ConcatenationLayer::setup(const Shape &shape, const Network &net)
 
     out_shape_ = out_shape;
 
-    outputs_.reserve(out_shape_.get_size());
+    outputs_.resize(out_shape_.get_size());
     return 0;
 }
 

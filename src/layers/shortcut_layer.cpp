@@ -21,7 +21,7 @@ int ShortcutLayer::setup(const Shape &shape, const Network &net)
         return -1;
     }
     out_shape_ = layer0->out_shape();
-    outputs_.reserve(out_shape_.get_size());
+    outputs_.resize(out_shape_.get_size());
     return 0;
 }
 

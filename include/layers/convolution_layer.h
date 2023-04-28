@@ -19,7 +19,7 @@ public:
                      Layer(LayerParameters(LayerType::CONVOLUTION,true)) {}
 
     ~ConvolutionLayer() override {
-       delete inter_layer;
+       //delete inter_layer;
     }
 
     void forward(Network &net) override;

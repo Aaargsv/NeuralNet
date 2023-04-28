@@ -33,7 +33,7 @@ int YoloLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_ = in_shape_;
-    outputs_.reserve(out_shape_.get_size());
+    outputs_.resize(out_shape_.get_size());
     return 0;
 }
 

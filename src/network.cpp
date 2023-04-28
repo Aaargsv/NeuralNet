@@ -11,15 +11,14 @@
 
 Network::Network(int height, int width,
                  const std::string &image_file_name,
-                 const std::string &weight_file_name,
+                 const std::string &weight_file_name, int num_classes,
                  int &error_status): net_shape_(height, width, 3),
-    image_file_name_(image_file_name), weights_file_name_(weight_file_name)
+    image_file_name_(image_file_name), weights_file_name_(weight_file_name), num_classes_(num_classes)
 {
     if (load_image(image_file_name))
         error_status = 1;
     if (!error_status) {
-        input_image_tensor.reserve(input_image_shape_.c * input_image_shape_.h * input_image_shape_.w);
-        resized_image_tensor.reserve(net_shape_.c * net_shape_.h * net_shape_.w);
+        resized_image_tensor.resize(net_shape_.c * net_shape_.h * net_shape_.w);
         bilinear_interpolation(input_image_tensor, input_image_shape_.h, input_image_shape_.w,
                                resized_image_tensor, net_shape_.h, net_shape_.w, net_shape_.c);
     }
@@ -72,9 +71,10 @@ int Network::setup()
     }
 
 #ifdef GPU
-    gpu_malloc(dev_utility_memory, utility_memory_size);
+    std::cout << "GPU NETWORK" << std::endl;
+    gpu_malloc(&dev_utility_memory, utility_memory_size * sizeof(float));
 #else
-    utility_memory.reserve(utility_memory_size);
+    utility_memory.resize(utility_memory_size);
 #endif
 
     std::cout << "utility_memory capacity = " << utility_memory.capacity() << std::endl;
@@ -90,7 +90,7 @@ int Network::load_image(const std::string &filename)
         return 1;
     }
 
-    input_image_tensor.reserve(channels * height * width);
+    input_image_tensor.resize(channels * height * width);
     input_image_shape_.reshape(height, width, channels);
     for (int c = 0; c < input_image_shape_.c; c++) {
         for (int h = 0; h < input_image_shape_.h; h++) {
@@ -200,7 +200,7 @@ int Network::load_pretrained(const std::string &filename)
 
 void Network::gather_bounding_boxes()
 {
-    bounding_boxes_.reserve(num_classes_);
+    bounding_boxes_.resize(num_classes_);
     for (int i = 0; i < layers_.size(); i++) {
         if (layers_[i]->layer_param().layer_type_ == LayerType::YOLO) {
             static_cast<YoloLayer*>(layers_[i])->get_bounding_boxes(bounding_boxes_,
@@ -328,6 +328,31 @@ int Network::save_image(const std::string &file_name)
     return 0;
 }
 
+int Network::save_detections(const std::string &file_name)
+{
+    std::ofstream file_detections(file_name, std::ios::binary);
+    if (!file_detections) {
+        std::cout << "[Error]: can't open detections file" << std::endl;
+        return 1;
+    }
+
+    for (int i = 0; i < bounding_boxes_.size(); ++i) {
+        for (int j = 0; j < bounding_boxes_[i].size(); ++j) {
+            file_detections << "bx: " << bounding_boxes_[i][j].bx << " "
+                            << "by: " << bounding_boxes_[i][j].by << " "
+                            << "bw: " << bounding_boxes_[i][j].bw << " "
+                            << "bh: " << bounding_boxes_[i][j].bh << " "
+                            << "pc: " << bounding_boxes_[i][j].probability << " "
+                            << "class: " << i << std::endl;
+
+            if (!file_detections) {
+                std::cout << "[Error]: can't write to detections file" << std::endl;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 
 Network& operator<<(Network &net, const Layer &layer)
 {

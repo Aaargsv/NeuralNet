@@ -31,8 +31,8 @@ int ConvolutionLayer::setup(const Shape &shape, const Network &net)
                                   << kernel_size_ << ", " << padding_ << ", " << stride_  << ") :"
                                   << out_shape_.h << std::endl;
 
-    weights_.reserve(weights_length_);
-    outputs_.reserve(out_shape_.get_size());
+    weights_.resize(weights_length_);
+    outputs_.resize(out_shape_.get_size());
     if (has_batch_norm_)
         inter_layer = new BatchNormLayer();
     else

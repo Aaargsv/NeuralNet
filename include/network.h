@@ -11,7 +11,7 @@ class Network {
 public:
     Network(int height, int width,
             const std::string &image_file_name,
-            const std::string &weight_file_name,
+            const std::string &weight_file_name, int num_classes,
             int &error_status);
     ~Network();
 
@@ -30,6 +30,7 @@ public:
     void draw_box(int x1, int y1, int x2, int y2, float r, float g, float b);
     void trace_box_outline(int x1, int y1, int x2, int y2, int w, float r, float g, float b);
     void draw_bounding_boxes(float threshold);
+    int save_detections(const std::string &file_name);
     int save_image(const std::string &file_name);
 
     friend Network& operator<<(Network &net, const Layer &layer);

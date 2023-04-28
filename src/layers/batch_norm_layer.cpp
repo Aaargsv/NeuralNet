@@ -37,10 +37,10 @@ int BatchNormLayer::setup(const Shape &shape, const Network &net)
 {
     in_shape_ = shape;
     out_shape_ = shape;
-    rolling_mean_.reserve(shape.c);
-    rolling_variance_.reserve(shape.c);
-    gamma_.reserve(shape.c);
-    beta_.reserve(shape.c);
+    rolling_mean_.resize(shape.c);
+    rolling_variance_.resize(shape.c);
+    gamma_.resize(shape.c);
+    beta_.resize(shape.c);
     return 0;
 }
 

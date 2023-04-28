@@ -1,6 +1,7 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
+#include <iostream>
 #include "gpu.cuh"
 
 void gemm_gpu(int TA, int TB, int M, int N, int K, float ALPHA,
@@ -10,16 +11,15 @@ void gemm_gpu(int TA, int TB, int M, int N, int K, float ALPHA,
               float *C_gpu, int ldc)
 {
 
-    int init[16] = {0};
-    cublasHandle_t handles[16];
-    int i = 0;
-    cudaGetDevice(&i);
-    if(!init[i]) {
-        cublasCreate(&handles[i]);
-        init[i] = 1;
+
+    cublasHandle_t handle;
+
+    if(get_blas_handle(handle)) {
+        std::cout << "[Error]: can't run gemm_gpu" << std::endl;
+        exit(EXIT_FAILURE);
     }
-    cublasHandle_t handle = handles[i];
 
     cublasSgemm(handle, (TB ? CUBLAS_OP_T : CUBLAS_OP_N),
                                      (TA ? CUBLAS_OP_T : CUBLAS_OP_N), N, M, K, &ALPHA, B_gpu, ldb, A_gpu, lda, &BETA, C_gpu, ldc);
+
 }
