@@ -9,18 +9,21 @@ void BiasLayer::forward(Network &net)
     ouputs_ptr = net.current_tensor;
 }
 
-int BiasLayer::setup(const Shape &shape, const Network &net)
-{
+int BiasLayer::setup(const Shape &shape, const Network &net) {
     in_shape_ = shape;
     out_shape_ = shape;
     bias_.resize(shape.c);
     return 0;
+
 }
 
-int BiasLayer::load_pretrained(std::ifstream &weights_file)
+int BiasLayer::load_pretrained(std::ifstream &weights_file, std::ofstream &check_file)
 {
     if(!weights_file.read(reinterpret_cast<char*>(bias_.data()), out_shape_.c * sizeof(float)))
         return 1;
+
+    check_file.write((char*)bias_.data(), out_shape_.c * sizeof(float));
+
     return 0;
 }
 

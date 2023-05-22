@@ -6,10 +6,15 @@
 
 void MaxPollingLayer::forward(Network &net) {
     std::vector<float> &input = *net.current_tensor;
-    max_pool(input, in_shape_.c, in_shape_.h, in_shape_.w,
-             window_size_, stride_, padding_, outputs_);
+
+    /*max_pool(input, in_shape_.c, in_shape_.h, in_shape_.w,
+             window_size_, stride_, padding_, outputs_);*/
+
+    max_pool2(input, in_shape_.c, in_shape_.h, in_shape_.w,
+              window_size_, stride_, padding_, outputs_);
+
     net.current_tensor = &outputs_;
-    print_info();
+    //print_info();
 }
 
 int MaxPollingLayer::setup(const Shape &shape, const Network &net) {
@@ -50,7 +55,7 @@ int MaxPollingLayer::compute_out_height() const
     return (in_shape_.h + padding_ - window_size_) / stride_ + 1;
 }
 
-int MaxPollingLayer::load_pretrained(std::ifstream &weights_file)
+int MaxPollingLayer::load_pretrained(std::ifstream &weights_file, std::ofstream &check_file)
 {
     return 0;
 };

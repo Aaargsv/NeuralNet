@@ -1,5 +1,5 @@
 #include "gpu.cuh"
-#include "operations/im2col_gpu.h"
+#include "operations/im2col.h"
 
 __global__ void im2col_gpu_kernel(const int n, const float* data_im,
                                   const int height, const int width, const int ksize,

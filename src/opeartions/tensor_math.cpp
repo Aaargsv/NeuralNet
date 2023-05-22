@@ -39,6 +39,13 @@ void concatenate(std::vector<float> &dst, const std::vector<float> &src)
     dst.insert(dst.end(), src.begin(), src.end());
 }
 
+void copy_vector(std::vector<float> &dst, const std::vector<float> &src, int start, int len)
+{
+    for (int i = 0; i < len; i++) {
+        dst[start + i] = src[i];
+    }
+}
+
 void add_tensors(const std::vector<float> &a, const std::vector<float> &b,
                  int size, std::vector<float> &c)
 {

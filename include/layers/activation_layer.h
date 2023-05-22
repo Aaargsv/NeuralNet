@@ -17,7 +17,7 @@ protected:
     virtual float activation(float x) const = 0;
     std::vector<float> *outputs_ptr_;
 private:
-    int load_pretrained(std::ifstream &input_file) override;
+    int load_pretrained(std::ifstream &weights_file, std::ofstream &check_file) override;
 };
 
 #endif //ACTIVATION_LAYER_H

@@ -47,6 +47,12 @@ inline bool is_tensor_sizes_equal(const Shape &shape1, const Shape &shape2)
             (shape1.c == shape2.c));
 }
 
+enum class ConvType {
+    IM2COL,
+    WINOGRAD3x3,
+    KN2ROW
+};
+
 
 enum class LayerType {
     CONVOLUTION,

@@ -17,7 +17,7 @@ public:
     MaxPollingLayer* clone() const override;
     int compute_out_width() const;
     int compute_out_height() const;
-    int load_pretrained(std::ifstream &weights_file) override;
+    int load_pretrained(std::ifstream &weights_file, std::ofstream &check_file) override;
 
 protected:
     /// Pooling parameters

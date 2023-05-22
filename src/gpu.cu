@@ -104,5 +104,16 @@ int extract_from_gpu(float *cpu_data, float *gpu_data, int len)
     return 0;
 }
 
+int gpu_free_memory(float *dev_data)
+{
+    cudaError_t error_status = cudaFree(dev_data);
+    if (error_status != cudaSuccess) {
+        std::cout << "[Error]: cuda can't free gpu memory. [Cuda error]: "
+                  << cudaGetErrorString( error_status ) << std::endl;
+        return 1;
+    }
+    return 0;
+}
+
 
 

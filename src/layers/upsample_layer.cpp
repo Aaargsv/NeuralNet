@@ -43,7 +43,7 @@ int UpsampleLayer::compute_out_height() const
     return in_shape_.h * stride_;
 }
 
-int UpsampleLayer::load_pretrained(std::ifstream &weights_file)
+int UpsampleLayer::load_pretrained(std::ifstream &weights_file, std::ofstream &check_file)
 {
     return 0;
 };

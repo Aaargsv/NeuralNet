@@ -87,11 +87,12 @@ int YoloLayer::get_number_detection() const
  */
 void YoloLayer::get_bounding_boxes(BoundingBoxes &bounding_boxes, int net_height, int net_width) const
 {
+
     for (int n = 0; n < number_of_anchor_boxes_; n++) {
         for (int h = 0; h < in_shape_.h; h++ ) {
             for (int w = 0; w < in_shape_.w; w++) {
                 int confidence_index = get_element_pos(n, 4, h, w);
-                if (confidence_index < threshold_)
+                if (outputs_[confidence_index] < threshold_)
                     continue;
                 BoundingBox bb;
                 int tx_index = get_element_pos(n, 0, h, w);
@@ -133,7 +134,7 @@ YoloLayer *YoloLayer::clone() const
 }
 
 
-int YoloLayer::load_pretrained(std::ifstream &weights_file)
+int YoloLayer::load_pretrained(std::ifstream &weights_file, std::ofstream &check_file)
 {
     return 0;
 };

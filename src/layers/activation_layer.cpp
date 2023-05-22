@@ -16,7 +16,7 @@ int ActivationLayer::setup(const Shape &shape, const Network &net)
     return 0;
 }
 
-int ActivationLayer::load_pretrained(std::ifstream &input_file)
+int ActivationLayer::load_pretrained(std::ifstream &weights_file, std::ofstream &check_file)
 {
     return 0;
 }

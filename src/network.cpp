@@ -62,6 +62,7 @@ int Network::setup()
     Shape input_layer_shape = net_shape_;
     int temp;
     for (int i = 0; i < layers_.size(); i++) {
+        //std::cout << "layer " << i << " input_c = " <<  input_layer_shape.c << std::endl;
         if ((temp = layers_[i]->setup(input_layer_shape, *this)) < 0) {
             std::cout << "[Error]: can't setup layer #" << i << std::endl;
             return 1;
@@ -187,10 +188,25 @@ int Network::load_pretrained(const std::string &filename)
 
     /// header consists of major(4 byte) + minor(4 byte) + revision(4 byte) + seen(8 byte): sum is 20 byte
     /// skip header
-    file_weights.seekg(20);
+
+
+    std::ofstream check("check", std::ios::binary);
+    if (!check) {
+        std::cout << "[Error]: can't open check file: " << "check" << std::endl;
+        return 1;
+    }
+
+    char buf[20];
+
+    file_weights.read(buf, 20);
+    check.write(buf, 20);
+    //file_weights.seekg(20);
+
+
+
 
     for (int i = 0; i < layers_.size(); i++) {
-        if (layers_[i]->load_pretrained(file_weights)) {
+        if (layers_[i]->load_pretrained(file_weights, check)) {
             return 1;
         }
     }

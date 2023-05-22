@@ -7,7 +7,9 @@
 #include "layers/yolo_layer.h"
 #include "layers/concatenation_layer.h"
 #include "layers/upsample_layer.h"
+#include "neural.h"
 #include "gpu.cuh"
+#include "timer.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -18,7 +20,7 @@ int main()
     std::cout << "GPU MODE" << std::endl;
 #endif
 
-    std::string  image_file = "P0294.png";
+    std::string  image_file = "airport2.jpg";
     std::string  weight_file = "yolov3-tiny_obj_best.weights";
 
     display_header();
@@ -29,56 +31,60 @@ int main()
         std::cout << "[Error]: cnn" << std::endl;
         return 1;
     }
-    float threshold = 0.0;
+    float threshold = 0.4;
 
-    model << /*0*/  ConvolutionLayerGPU(3, 16, 1, 1, true)
+    model << /*0*/  ConvolutionLayer(3, 16, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*1*/  LeakyReluLayer()
           << /*2*/  MaxPollingLayer(2, 1, 2) /// padding is zero???
-          << /*3*/  ConvolutionLayerGPU(3, 32, 1, 1, true)
+          << /*3*/  ConvolutionLayer(3, 32, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*4*/  LeakyReluLayer()
           << /*5*/  MaxPollingLayer(2, 1, 2)
-          << /*6*/  ConvolutionLayerGPU(3, 64, 1, 1, true)
+          << /*6*/  ConvolutionLayer(3, 64, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*7*/  LeakyReluLayer()
           << /*8*/  MaxPollingLayer(2, 1, 2)
-          << /*9*/  ConvolutionLayerGPU(3, 128, 1, 1, true)
+          << /*9*/  ConvolutionLayer(3, 128, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*10*/ LeakyReluLayer()
           << /*11*/ MaxPollingLayer(2, 1, 2)
-          << /*12*/ ConvolutionLayerGPU(3, 256, 1, 1, true)
+          << /*12*/ ConvolutionLayer(3, 256, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*13*/ LeakyReluLayer()
           << /*14*/ MaxPollingLayer(2, 1, 2)
-          << /*15*/ ConvolutionLayerGPU(3, 512, 1, 1, true)
+          << /*15*/ ConvolutionLayer(3, 512, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*16*/ LeakyReluLayer()
           << /*17*/ MaxPollingLayer(2, 1, 1) /// stride is 1???
-          << /*18*/ ConvolutionLayerGPU(3, 1024, 1, 1, true)
+          << /*18*/ ConvolutionLayer(3, 1024, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*19*/ LeakyReluLayer()
           /**********************************************/
-          << /*20*/ ConvolutionLayerGPU(1, 256, 0, 1, true)
+          << /*20*/ ConvolutionLayer(1, 256, 0, 1, true)
           << /*21*/ LeakyReluLayer()
-          << /*22*/ ConvolutionLayerGPU(3, 512, 1, 1, true)
+          << /*22*/ ConvolutionLayer(3, 512, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*23*/ LeakyReluLayer()
-          << /*24*/ ConvolutionLayerGPU(1, 18, 0, 1, false)
+          << /*24*/ ConvolutionLayer(1, 18, 0, 1, false)
           << /*25*/ LinearLayer()
           << /*26*/ YoloLayer(3, 1, threshold, {81,82,  135,169,  344,319})
           << /*27*/ ConcatenationLayer({20})
-          << /*28*/ ConvolutionLayerGPU(1, 128, 0, 1, true)
+          << /*28*/ ConvolutionLayer(1, 128, 0, 1, true)
           << /*29*/ LeakyReluLayer()
           << /*30*/ UpsampleLayer(2)
-          << /*31*/ ConcatenationLayer({30, 11})
-          << /*32*/ ConvolutionLayerGPU(3, 256, 1, 1, true)
+          << /*31*/ ConcatenationLayer({30, 12})
+          << /*32*/ ConvolutionLayer(3, 256, 1, 1, true, ConvType::WINOGRAD3x3)
           << /*33*/ LeakyReluLayer()
-          << /*34*/ ConvolutionLayerGPU(1, 18, 0, 1, false)
+          << /*34*/ ConvolutionLayer(1, 18, 0, 1, false)
           << /*35*/ LinearLayer()
           << /*36*/ YoloLayer(3, 1, threshold, {23,27,  37,58,  81,82});
 
+
+    Timer timer("all inference");
     if (model.infer()) {
         std::cout << "[Error]: can't infer" << std::endl;
         return 1;
     }
+    timer.stop();
 
     model.save_detections("log_detections.txt");
 
-    //model.apply_nms(0.4);
-    model.draw_bounding_boxes(0.28);
+    model.apply_nms(0.4);
+    model.draw_bounding_boxes(threshold);
+
     if (model.save_image("detection")) {
         std::cout << "[Error]: can't save file" << std::endl;
         return 1;
@@ -86,9 +92,9 @@ int main()
 
     /**
      *  Network cnn(416, 416, 3);
-     *  cnn << ConvolutionLayerGPU(3, 16, 1, 1, true)
+     *  cnn << ConvolutionLayer(3, 16, 1, 1, true)
      *  << MaxPollingLayer(2, 2, 2)
-     *  << ConvolutionLayerGPU(3, 32, 1, 1, false);
+     *  << ConvolutionLayer(3, 32, 1, 1, false);
      *  cnn.setup();
 
      *  std::vector<float> image(416 * 416 * 3);

@@ -38,3 +38,39 @@ void max_pool(const std::vector<float> &src, int channels, int src_height, int s
         }
     }
 }
+
+void max_pool2(const std::vector<float> &src, int channels, int src_height, int src_width,
+               int kernel, int stride, int pad, std::vector<float> &dst)
+{
+    int b,i,j,k,m,n;
+    int w_offset = -pad/2;
+    int h_offset = -pad/2;
+
+    int h = (src_height - kernel + pad) / stride + 1;
+    int w = (src_width - kernel + pad) / stride + 1;
+    int c = channels;
+    b = 0;
+    for(k = 0; k < c; ++k){
+        for(i = 0; i < h; ++i){
+            for(j = 0; j < w; ++j){
+                int out_index = j + w*(i + h*(k + c*b));
+                float max = -FLT_MAX;
+                int max_i = -1;
+                for(n = 0; n < kernel; ++n){
+                    for(m = 0; m < kernel; ++m){
+                        int cur_h = h_offset + i*stride + n;
+                        int cur_w = w_offset + j*stride + m;
+                        int index = cur_w + src_width*(cur_h + src_height*(k + b*channels));
+                        int valid = (cur_h >= 0 && cur_h < src_height &&
+                                     cur_w >= 0 && cur_w < src_width);
+                        float val = (valid != 0) ? src[index] : -FLT_MAX;
+                        max_i = (val > max) ? index : max_i;
+                        max   = (val > max) ? val   : max;
+                    }
+                }
+                dst[out_index] = max;
+            }
+        }
+    }
+}
+

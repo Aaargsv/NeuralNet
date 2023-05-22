@@ -13,9 +13,9 @@ public:
                      int filters,
                      int padding,
                      int stride,
-                     bool has_batch_norm=false):
+                     bool has_batch_norm=false, ConvType convolution_type=ConvType::IM2COL):
                      kernel_size_(kernel_size), filters_(filters), inter_layer(nullptr),
-                     padding_(padding), stride_(stride), has_batch_norm_(has_batch_norm),
+                     padding_(padding), stride_(stride), has_batch_norm_(has_batch_norm), convolution_type_(convolution_type),
                      Layer(LayerParameters(LayerType::CONVOLUTION,true)) {}
 
     ~ConvolutionLayer() override {
@@ -23,7 +23,7 @@ public:
     }
 
     void forward(Network &net) override;
-    int load_pretrained(std::ifstream &input_file) override;
+    int load_pretrained(std::ifstream &weights_file, std::ofstream &check_file) override;
     int setup(const Shape &shape, const Network &net) override;
     const std::vector<float> &get_outputs() override;
     void print_info() const override;
@@ -40,11 +40,13 @@ protected:
     int padding_;
     int stride_;
     int weights_length_;
+    ConvType convolution_type_;
     /// Bias layer or batch_norm layer.
     Layer *inter_layer;
     std::vector<float> weights_;
     std::vector<float> outputs_;
 
 };
+
 
 #endif //CONVOLUTION_LAYER_H

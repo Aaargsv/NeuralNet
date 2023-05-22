@@ -19,7 +19,7 @@ public:
     * @return utility memory size
     */
     virtual int setup(const Shape &shape, const Network &net) = 0;
-    virtual int load_pretrained(std::ifstream &weights_file) = 0;
+    virtual int load_pretrained(std::ifstream &weights_file, std::ofstream &check_file) = 0;
     virtual Layer *clone() const = 0;
     virtual void print_info() const = 0;
     virtual const std::vector<float> &get_outputs() = 0;
@@ -31,10 +31,10 @@ public:
     inline const LayerParameters &layer_param() const {
         return layer_param_;
     }
-    inline const Shape &in_shape() const {
+    inline const Shape in_shape() const {
         return in_shape_;
     }
-    inline const Shape &out_shape() const {
+    inline const Shape out_shape() const {
         return out_shape_;
     }
 

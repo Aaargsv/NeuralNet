@@ -15,6 +15,6 @@ void concatenate(std::vector<float> &dst, const std::vector<float> &src);
 void add_tensors(const std::vector<float> &a, const std::vector<float> &b,
                  int size, std::vector<float> &c);
 
-
+void copy_vector(std::vector<float> &dst, const std::vector<float> &src, int start, int len);
 
 #endif //TENSOR_MATH_H

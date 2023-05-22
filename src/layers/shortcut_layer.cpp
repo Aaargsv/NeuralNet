@@ -10,6 +10,7 @@ void ShortcutLayer::forward(Network &net)
     add_tensors(layers[prev_layer_index_]->get_outputs(),
                 layers[index_]->get_outputs(),
                 size, outputs_);
+    net.current_tensor = &outputs_;
     print_info();
 }
 
@@ -40,7 +41,7 @@ ShortcutLayer *ShortcutLayer::clone() const
     return new ShortcutLayer(*this);
 }
 
-int ShortcutLayer::load_pretrained(std::ifstream &weights_file)
+int ShortcutLayer::load_pretrained(std::ifstream &weights_file, std::ofstream &check_file)
 {
     return 0;
 };

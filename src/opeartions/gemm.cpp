@@ -32,10 +32,6 @@ void gemm(int M, int N, int K,
         }
         for (int k = 0; k < K; k++ ) {
 
-            std::cout << "A.capacity() = " << A.capacity() << std::endl;
-            std::cout << "i * lda + k =  " << i * lda + k << std::endl;
-
-            assert(i * lda + k < A.capacity());
             float ax = A[i * lda + k];
             for (int j = 0; j < N; j++) {
                 C[i * ldc + j] += ax * B[k * ldb +  j];

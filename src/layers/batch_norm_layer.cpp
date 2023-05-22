@@ -13,10 +13,10 @@ void BatchNormLayer::forward(Network &net)
     add_bias(input, beta_,
           in_shape_.c, in_shape_.h * in_shape_.w);
     ouputs_ptr = net.current_tensor;
-    print_info();
+    //print_info();
 }
 
-int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
+int BatchNormLayer::load_pretrained(std::ifstream &weights_file, std::ofstream &check_file)
 {
     if (!weights_file.read(reinterpret_cast<char*>(beta_.data()),
                            out_shape_.c * sizeof(float)))
@@ -30,6 +30,12 @@ int BatchNormLayer::load_pretrained(std::ifstream &weights_file)
     if (!weights_file.read(reinterpret_cast<char*>( rolling_variance_.data()),
                            out_shape_.c * sizeof(float)))
         return 1;
+
+    check_file.write((char*)beta_.data(), out_shape_.c * sizeof(float));
+    check_file.write((char*)gamma_.data(), out_shape_.c * sizeof(float));
+    check_file.write((char*)rolling_mean_.data(), out_shape_.c * sizeof(float));
+    check_file.write((char*)rolling_variance_.data(), out_shape_.c * sizeof(float));
+
     return 0;
 }
 
