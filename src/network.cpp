@@ -79,6 +79,7 @@ int Network::setup()
 #endif
 
     std::cout << "utility_memory capacity = " << utility_memory.capacity() << std::endl;
+
     return 0;
 }
 
